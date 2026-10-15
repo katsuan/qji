@@ -24,7 +24,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <main class="wrap">
@@ -33,16 +33,16 @@
     <h1 class="brand-name"><img class="brand-icon" src="icon.svg" alt="" width="30" height="30">くじ</h1>
     <img class="brand-logo" src="logo.svg" alt="Qji" width="40" height="28">
   </header>
-  <p class="lead">当番・順番・チーム分け・お題・罰ゲーム。<br>その場で公平に決めて、LINE で送れます。</p>
+  <p class="lead tool-only">当番・順番・チーム分け・お題・罰ゲーム。<br>その場で公平に決めて、LINE で送れます。</p>
 
   <!-- 決め方（モード）。押すと下の入力が切り替わる -->
-  <nav id="modes" class="modes" aria-label="決め方"></nav>
+  <nav id="modes" class="modes tool-only" aria-label="決め方"></nav>
 
-  <section id="form" class="card" aria-live="polite"></section>
+  <section id="form" class="card tool-only" aria-live="polite"></section>
 
   <!-- ヒミツで引く：引いた人にも結果を見せず、受け取った人が「ひらく」を押すまで伏せておく -->
-  <label class="secret"><input id="secretToggle" type="checkbox">🙈 ヒミツで引く<small>結果を見ずに LINE で送り、みんなで「ひらく」</small></label>
-  <button id="drawButton" class="draw" type="button">🎟️ 引く！</button>
+  <label class="secret tool-only"><input id="secretToggle" type="checkbox">🙈 ヒミツで引く<small>結果を見ずに LINE で送り、みんなで「ひらく」</small></label>
+  <button id="drawButton" class="draw tool-only" type="button">🎟️ 引く！</button>
 
   <!-- 結果。確かめるリンクで開いたときは、上に「同じ条件で引き直した結果」と出す -->
   <section id="result" class="card result" hidden>
@@ -52,11 +52,12 @@
     <div class="actions">
       <a id="sendButton" class="btn line" href="#">💬 LINEで送る<small>（おくるん）</small></a>
       <button id="copyButton" class="btn ghost" type="button">🔗 確かめるリンクをコピー</button>
+      <a class="btn ghost result-page-only" href="./">🎟️ 自分でもくじを引く</a>
     </div>
     <p id="status" class="status" role="status"></p>
   </section>
 
-  <details class="card about">
+  <details class="card about tool-only">
     <summary>🔍 公平に決まる仕組み</summary>
     <p>引くたびに、ランダムな「タネ」（数字）を1つ作り、そのタネと入れた名前などから結果を決めます。</p>
     <p>「確かめるリンク」を開くと、同じタネと同じ条件でもう一度引き直すので、だれが開いても必ず同じ結果になります。あとから都合よく引き直していないことを、みんなで確かめられます。</p>
@@ -66,7 +67,7 @@
   <div data-tool-share></div>
 </main>
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 <script src="https://katsuan.github.io/line-share/shared/tool-share.js" data-tool="qji" defer></script>
 </body>
 </html>

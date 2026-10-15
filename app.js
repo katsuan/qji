@@ -456,7 +456,7 @@
     lastDraw = null;
   }
 
-  function renderResult(d, { verified = false, opened = false } = {}) {
+  function renderResult(d, { verified = false } = {}) {
     $("sendButton").hidden = false;
     $("copyButton").hidden = false;
     const body = $("resultBody");
@@ -485,14 +485,12 @@
       html += (r.who ? `<p class="who">😈 ${esc(r.who)} さん</p>` : "") + `<p class="big">${esc(r.pick.text)}</p>`;
     }
     body.innerHTML = html;
-    $("verifyNote").hidden = !verified;
-    if (verified) {
-      const when = d.time ? new Date(d.time).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
-      $("verifyNote").textContent = opened
-        ? `🎁 ${when ? when + " に引いた" : ""}ヒミツの結果です。だれが開いても同じ結果になります。`
-        : `🔍 確かめるリンクの結果です。${when ? when + " に引いたのと " : ""}同じタネ・同じ条件で引き直すと、必ずこの結果になります。`;
-    }
-    $("seedNote").textContent = `タネ：${d.seed.toString(16).padStart(8, "0")}`;
+    // 結果ページ（リンクから開いたとき）は、上に何も足さず結果だけ。引いた日時はタネの行に
+    $("verifyNote").hidden = true;
+    const when = verified && d.time ? new Date(d.time).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
+    $("seedNote").innerHTML =
+      `タネ：${d.seed.toString(16).padStart(8, "0")}${when ? `（${esc(when)} に引いた結果）` : ""}` +
+      `<br>同じタネと同じ条件なら、だれが開いても必ずこの結果になります。`;
     $("sendButton").href = cardUrl(d);
     $("status").textContent = "";
     $("result").hidden = false;
@@ -609,7 +607,7 @@
         $("sendButton").hidden = false;
         $("copyButton").hidden = false;
         $("copyButton").textContent = "🔗 確かめるリンクをコピー";
-        renderResult({ ...d, secret: false }, { verified: true, opened: true });
+        renderResult({ ...d, secret: false }, { verified: true });
       });
     }
   }
@@ -653,6 +651,8 @@
       renderModes();
       renderForm();
       lastDraw = { mode: v.m, seed: v.s >>> 0, input, time: v.t, result, secret: v.h === 1 };
+      // 結果ページ：決め方・入力・引くボタンは隠して、結果だけ見せる（自分でも引くときは下のボタンから）
+      document.body.classList.add("is-result-page");
       if (lastDraw.secret) renderSealed(lastDraw);
       else renderResult(lastDraw, { verified: true });
     } catch (error) {

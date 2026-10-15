@@ -107,6 +107,9 @@ textarea:focus, input:focus, select:focus { outline: none; border-color: var(--a
 .chip.is-active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
 .check { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
 .check input { width: 20px; height: 20px; accent-color: var(--accent); }
+.check:has(input:disabled) { color: var(--ink-soft); }
+.used { display: grid; justify-items: start; gap: 6px; padding: 10px 12px; border-radius: var(--radius-md); background: #fff7f5; }
+.used .hint { word-break: break-all; }
 .stepper { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 6px; align-items: center; }
 .stepper button {
   height: 44px;

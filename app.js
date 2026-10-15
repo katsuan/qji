@@ -28,7 +28,7 @@
     lottery: { type: "win", wins: 1, teams: 2 },
     amida: { goals: "" },
     roulette: { own: false, items: "" },
-    number: { min: 1, max: 100, count: 1, unique: true },
+    number: { min: 1, max: 100, count: 1, unique: true, keep: false, used: [] }, // keep：前に出た数字も出さない（ビンゴのように）。used に出た数字をためる
     topic: { cat: "all", style: "question" }, // style：question（ふつうのお題）か letter（「あ」から始まる「〇〇」は？）
     penalty: { cat: "all", who: true }
   };
@@ -115,7 +115,10 @@
       case "number": {
         const min = clampInt(state.number.min, -99999, 99999, 1);
         const max = clampInt(state.number.max, -99999, 99999, 100);
-        return { min: Math.min(min, max), max: Math.max(min, max), count: clampInt(state.number.count, 1, 20, 1), unique: Boolean(state.number.unique) };
+        const lo = Math.min(min, max), hi = Math.max(min, max);
+        // ビンゴのように続けて引くときは、前に出た数字（範囲内のもの）を外す。確かめるリンクにも入れて同じ結果にする
+        const exclude = state.number.keep ? (state.number.used || []).filter((n) => n >= lo && n <= hi).sort((a, b) => a - b) : [];
+        return { min: lo, max: hi, count: clampInt(state.number.count, 1, 20, 1), unique: Boolean(state.number.unique) || state.number.keep, ...(exclude.length ? { exclude } : {}) };
       }
       case "topic":
         return state.topic.style === "letter" ? { style: "letter" } : { cat: state.topic.cat };
@@ -138,7 +141,11 @@
       if (input.names.length > 12) return "あみだは12人までです。";
     }
     if (mode === "roulette" && input.items.length < 2) return state.roulette.own ? "ルーレットの項目を2つ以上入れてください。" : "名前を2つ以上入れてください。";
-    if (mode === "number" && input.unique && input.count > input.max - input.min + 1) return "重ならない数字が足りません。範囲を広げるか、数を減らしてください。";
+    if (mode === "number") {
+      const left = input.max - input.min + 1 - (input.exclude || []).length;
+      if (input.exclude && left <= 0) return "範囲の数字はぜんぶ出ました。「出た数字をリセット」で、はじめから引けます。";
+      if (input.unique && input.count > left) return input.exclude ? `残りの数字は ${left} 個です。いくつ出すかを減らしてください。` : "重ならない数字が足りません。範囲を広げるか、数を減らしてください。";
+    }
     if ((mode === "topic" && !data.topics) || (mode === "penalty" && !data.penalties)) return "お題を読み込み中です。少し待ってからもう一度。";
     return "";
   }
@@ -170,6 +177,13 @@
       case "number": {
         const nums = [];
         const range = input.max - input.min + 1;
+        if (input.exclude && input.exclude.length) {
+          // 前に出た数字を外した残りから引く
+          const skip = new Set(input.exclude);
+          const rest = [];
+          for (let n = input.min; n <= input.max; n += 1) if (!skip.has(n)) rest.push(n);
+          return { kind: "number", nums: shuffle(rest, rand).slice(0, input.count) };
+        }
         if (input.unique) {
           const picked = new Set();
           while (nums.length < input.count) {
@@ -249,7 +263,10 @@
       case "roulette":
         return { title: `🎡 ${result.items[result.index]}`, lines: [`候補：${result.items.join("、")}`] };
       case "number":
-        return { title: result.nums.join("・"), lines: [`${input.min}〜${input.max} から ${result.nums.length}つ${input.unique ? "（重ならない）" : ""}`] };
+        return {
+          title: result.nums.join("・"),
+          lines: [`${input.min}〜${input.max} から ${result.nums.length}つ${input.unique ? "（重ならない）" : ""}`, ...(input.exclude ? [`前に出た数字（${input.exclude.length}個）は除いて引きました`] : [])]
+        };
       case "topic":
         return { title: `💬 ${result.pick.text}`, lines: [`会話のお題（${result.pick.cat}）`] };
       case "letter":
@@ -395,7 +412,13 @@
         `<div class="row"><label class="field"><span class="label">いくつから</span><input type="number" inputmode="numeric" data-bind="number.min" value="${esc(n.min)}"></label>
           <label class="field"><span class="label">いくつまで</span><input type="number" inputmode="numeric" data-bind="number.max" value="${esc(n.max)}"></label></div>` +
         `<div class="field"><span class="label">いくつ出す</span>${stepper("number.count", n.count, 1, 20)}</div>` +
-        `<label class="check"><input type="checkbox" data-bind="number.unique" ${n.unique ? "checked" : ""}>同じ数字は出さない</label>`;
+        `<label class="check"><input type="checkbox" data-bind="number.unique" ${n.unique || n.keep ? "checked" : ""} ${n.keep ? "disabled" : ""}>1回の中で同じ数字は出さない</label>` +
+        `<label class="check"><input type="checkbox" data-bind="number.keep" ${n.keep ? "checked" : ""}>前に出た数字も出さない（ビンゴのように続けて引く）</label>` +
+        (n.keep
+          ? `<div class="used"><p class="hint">出た数字（${(n.used || []).length}個）${(n.used || []).length ? "：" + (n.used || []).join("・") : "：まだありません"}</p>` +
+            ((n.used || []).length ? `<button type="button" class="chip" data-reset-used>出た数字をリセット</button>` : "") +
+            `</div>`
+          : "");
     } else if (m === "topic") {
       const letter = state.topic.style === "letter";
       form.innerHTML =
@@ -434,6 +457,12 @@
   });
 
   $("form").addEventListener("click", (event) => {
+    if (event.target.closest("[data-reset-used]")) {
+      if (!window.confirm("出た数字をリセットして、はじめから引きますか？")) return;
+      setValue("number.used", []);
+      renderForm();
+      return;
+    }
     const chip = event.target.closest("[data-chip]");
     if (chip) {
       setValue(chip.dataset.chip, chip.dataset.value);
@@ -579,6 +608,11 @@
     }
     const seed = newSeed();
     lastDraw = { mode, seed, input, time: Date.now(), result: draw(mode, input, seed), secret: $("secretToggle").checked };
+    // ビンゴのように続けて引くときは、出た数字をためておく（次に引くときに外す）
+    if (mode === "number" && state.number.keep) {
+      setValue("number.used", [...(state.number.used || []), ...lastDraw.result.nums]);
+      renderForm();
+    }
     if (lastDraw.secret) renderSealed(lastDraw, { sender: true });
     else renderResult(lastDraw);
   });

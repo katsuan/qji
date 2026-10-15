@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>くじ｜くじ引き・あみだ・ルーレット</title>
+<meta name="description" content="くじ（Qji）。くじ引き・あみだくじ・ルーレット・数字・会話のお題・罰ゲームを、その場で公平に決めて LINE にカードで送れます。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="くじ（Qji）">
+<meta property="og:title" content="くじ｜くじ引き・あみだ・ルーレット">
+<meta property="og:description" content="当番・順番・チーム分け・お題・罰ゲームを、その場で公平に決めて LINE で送れます。">
+<meta property="og:url" content="https://katsuan.github.io/qji/">
+<meta property="og:image" content="https://katsuan.github.io/qji/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="くじ（Qji）：くじ引き・あみだ・ルーレット・お題・罰ゲーム">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#fff4f1">
+<!-- アイコン・ロゴ・OGP は tools/icon.py で作る -->
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<main class="wrap">
+  <!-- 見出しの行：アイコン＋名前（左）と横長のロゴ（右）。ほかのツール（さくせん盤・キロっく・ひっくり）と同じ形 -->
+  <header class="brand">
+    <h1 class="brand-name"><img class="brand-icon" src="icon.svg" alt="" width="30" height="30">くじ</h1>
+    <img class="brand-logo" src="logo.svg" alt="Qji" width="40" height="28">
+  </header>
+  <p class="lead">当番・順番・チーム分け・お題・罰ゲーム。<br>その場で公平に決めて、LINE で送れます。</p>
+
+  <!-- 決め方（モード）。押すと下の入力が切り替わる -->
+  <nav id="modes" class="modes" aria-label="決め方"></nav>
+
+  <section id="form" class="card" aria-live="polite"></section>
+
+  <button id="drawButton" class="draw" type="button">🎟️ 引く！</button>
+
+  <!-- 結果。確かめるリンクで開いたときは、上に「同じ条件で引き直した結果」と出す -->
+  <section id="result" class="card result" hidden>
+    <p id="verifyNote" class="verify-note" hidden></p>
+    <div id="resultBody"></div>
+    <p id="seedNote" class="seed-note"></p>
+    <div class="actions">
+      <a id="sendButton" class="btn line" href="#">💬 LINEで送る<small>（おくるん）</small></a>
+      <button id="copyButton" class="btn ghost" type="button">🔗 確かめるリンクをコピー</button>
+    </div>
+    <p id="status" class="status" role="status"></p>
+  </section>
+
+  <details class="card about">
+    <summary>🔍 公平に決まる仕組み</summary>
+    <p>引くたびに、ランダムな「タネ」（数字）を1つ作り、そのタネと入れた名前などから結果を決めます。</p>
+    <p>「確かめるリンク」を開くと、同じタネと同じ条件でもう一度引き直すので、だれが開いても必ず同じ結果になります。あとから都合よく引き直していないことを、みんなで確かめられます。</p>
+  </details>
+
+  <!-- 「📤 くじを紹介する」：おくるんで紹介カードを送る窓口（line-share/shared/tool-share.js。中身は line-share/data/hub-links.json） -->
+  <div data-tool-share></div>
+</main>
+
+<script src="app.js?v=1"></script>
+<script src="https://katsuan.github.io/line-share/shared/tool-share.js" data-tool="qji" defer></script>
+</body>
+</html>

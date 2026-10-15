@@ -1,0 +1,18 @@
+{
+  "name": "くじ",
+  "short_name": "くじ",
+  "description": "くじ引き・あみだ・ルーレット・数字・お題・罰ゲームを、その場で公平に決めて LINE で送れるツール（Qji）",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff4f1",
+  "theme_color": "#fff4f1",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "icon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

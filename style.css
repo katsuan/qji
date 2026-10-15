@@ -1,0 +1,245 @@
+/* くじ（Qji）。色はロゴのコーラルの赤、字は丸ゴシック（ほかのツールとそろえる） */
+:root {
+  --accent: #e23e4a;
+  --accent-dark: #b8202f;
+  --accent-soft: #ffe8e4;
+  --wood: #e2ba70;
+  --ink: #3a2a2b;
+  --ink-soft: #6e5b5c; /* 年配の方でも読めるよう濃いめ */
+  --line: #f1d9d4;
+  --line-green: #06c755;
+  --bg: #fff4f1;
+  --card: #ffffff;
+  --shadow: 0 10px 28px rgba(140, 40, 40, 0.1);
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --max-w: 480px;
+  --font: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #ffd9d2, transparent 40%), var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  display: grid;
+  gap: 14px;
+  width: min(100%, var(--max-w));
+  margin: 0 auto;
+  padding: 14px 16px calc(32px + env(safe-area-inset-bottom));
+}
+
+/* 見出しの行：アイコン＋名前（左）とロゴ（右） */
+.brand { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.brand-name { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 24px; font-weight: 800; }
+.brand-icon { display: block; width: 30px; height: 30px; }
+.brand-logo { display: block; width: auto; height: 28px; }
+.lead { margin: 0; color: var(--ink-soft); font-size: 15px; line-height: 1.7; }
+
+/* 決め方（モード）：3列 × 2段 */
+.modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.mode {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-height: 64px;
+  padding: 8px 4px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.mode span { font-size: 22px; line-height: 1.1; }
+.mode.is-active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+
+.card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+/* 入力 */
+.field { display: grid; gap: 6px; }
+.label { font-size: 15px; font-weight: 700; }
+.hint { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.6; }
+textarea, input[type="number"], input[type="text"], select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px; /* iPhone で拡大されない大きさ */
+  appearance: none;
+  -webkit-appearance: none;
+}
+textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+textarea:focus, input:focus, select:focus { outline: none; border-color: var(--accent); }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.chip.is-active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+.check { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+.check input { width: 20px; height: 20px; accent-color: var(--accent); }
+.stepper { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 6px; align-items: center; }
+.stepper button {
+  height: 44px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.stepper input { text-align: center; }
+
+/* 引く！ */
+.draw {
+  min-height: 60px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff7a6b, var(--accent));
+  box-shadow: 0 10px 22px rgba(226, 62, 74, 0.32);
+  color: #fff;
+  font: inherit;
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.draw:active { transform: translateY(1px); }
+.draw:disabled { opacity: 0.6; cursor: default; }
+
+/* 結果 */
+.result { animation: pop 0.35s ease-out; }
+@keyframes pop { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.result-title { margin: 0; color: var(--ink-soft); font-size: 14px; font-weight: 700; }
+.big {
+  margin: 0;
+  color: var(--accent-dark);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+  word-break: break-word;
+}
+.big.is-shuffling { color: var(--ink-soft); }
+.list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: #fff7f5;
+  font-size: 16px;
+  font-weight: 700;
+}
+.list li.is-win { background: var(--accent-soft); color: var(--accent-dark); }
+.list li .no {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--accent-dark);
+  font-size: 14px;
+}
+.teams { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.team { padding: 10px 12px; border-radius: var(--radius-md); background: #fff7f5; }
+.team h3 { margin: 0 0 4px; color: var(--accent-dark); font-size: 15px; }
+.team p { margin: 0; font-size: 15px; line-height: 1.7; }
+.numbers { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.numbers b {
+  display: inline-grid;
+  place-items: center;
+  min-width: 64px;
+  height: 64px;
+  padding: 0 10px;
+  border-radius: 18px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+}
+.who { margin: 0; text-align: center; font-size: 18px; font-weight: 800; }
+
+/* あみだ */
+.amida { width: 100%; height: auto; }
+.amida .rail { stroke: #e3cfc9; stroke-width: 4; stroke-linecap: round; }
+.amida .path { fill: none; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.amida text { font-family: var(--font); font-weight: 700; }
+
+/* ルーレット */
+.wheel-box { position: relative; width: min(100%, 320px); margin: 0 auto; }
+.wheel { display: block; width: 100%; height: auto; }
+.wheel-spin { transform-origin: 50% 50%; transition: transform 3.2s cubic-bezier(0.16, 0.84, 0.22, 1); }
+.wheel-pointer { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 28px; line-height: 1; }
+
+.verify-note {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: #eef8f1;
+  color: #1f6b3b;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.seed-note { margin: 0; color: var(--ink-soft); font-size: 12px; text-align: center; }
+.actions { display: grid; gap: 8px; }
+.btn {
+  display: grid;
+  place-items: center;
+  min-height: 50px;
+  padding: 6px 12px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn small { font-size: 12px; font-weight: 700; }
+.btn.line { background: var(--line-green); color: #fff; }
+.btn.ghost { border-color: var(--line); background: #fff; color: var(--ink); }
+.status { min-height: 1em; margin: 0; color: var(--ink-soft); font-size: 13px; text-align: center; }
+
+.about summary { font-size: 15px; font-weight: 700; cursor: pointer; }
+.about p { margin: 8px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
+
+@media (prefers-reduced-motion: reduce) {
+  .result, .wheel-spin { animation: none; transition: none; }
+}

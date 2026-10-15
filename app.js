@@ -685,7 +685,7 @@
       renderModes();
       renderForm();
       lastDraw = { mode: v.m, seed: v.s >>> 0, input, time: v.t, result, secret: v.h === 1 };
-      // 結果ページ：決め方・入力・引くボタンは隠して、結果だけ見せる（自分でも引くときは下のボタンから）
+      // 結果ページ：決め方・入力・引くボタンは隠して、結果だけ見せる（新しく引くときは下のボタンから）
       document.body.classList.add("is-result-page");
       if (lastDraw.secret) renderSealed(lastDraw);
       else renderResult(lastDraw, { verified: true });

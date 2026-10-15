@@ -265,8 +265,8 @@ textarea:focus, input:focus, select:focus { outline: none; border-color: var(--a
 
 /* 結果ページ（リンクから開いたとき）は結果だけ。決め方・入力・引くボタン・仕組みの説明は隠す */
 .is-result-page .tool-only { display: none; }
-.result-page-only { display: none; }
-.is-result-page .result-page-only { display: grid; }
+.result-page-only, .btn.result-page-only { display: none; }
+.is-result-page .result-page-only, .is-result-page .btn.result-page-only { display: grid; }
 .actions { display: grid; gap: 8px; }
 .btn {
   display: grid;

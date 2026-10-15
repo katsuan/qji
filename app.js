@@ -299,6 +299,19 @@
     return `${PAGE_URL}?r=${encode({ m: d.mode, s: d.seed, i: d.input, t: d.time, ...(d.secret ? { h: 1 } : {}) })}`;
   }
 
+  // カードのバッジ：引いたモード（と、ヒミツ・続けて引いたときはその印）
+  function badges(d, mode) {
+    const list = [`${mode.icon} ${mode.label}`];
+    if (d.secret) list.push("🔒 ヒミツ");
+    if (d.input.exclude) list.push("🔁 続けて引く");
+    return list;
+  }
+
+  function withBadges(params, list) {
+    list.forEach((badge) => params.append("badge", badge));
+    return params;
+  }
+
   function cardUrl(d) {
     const sum = summary(d.mode, d.input, d.result);
     const mode = MODES.find((m) => m.key === d.mode);
@@ -319,7 +332,7 @@
         actionUrl: verifyUrl(d),
         from: "qji"
       });
-      return `${OQRN_CARD}?${params}`;
+      return `${OQRN_CARD}?${withBadges(params, badges(d, mode))}`;
     }
     const params = new URLSearchParams({
       headerTitle: `${mode.icon} ${mode.label}の結果`,
@@ -334,7 +347,7 @@
       actionUrl: verifyUrl(d),
       from: "qji"
     });
-    return `${OQRN_CARD}?${params}`;
+    return `${OQRN_CARD}?${withBadges(params, badges(d, mode))}`;
   }
 
   // ---- 画面：決め方のボタン ----

@@ -29,7 +29,7 @@
     amida: { goals: "" },
     roulette: { own: false, items: "" },
     number: { min: 1, max: 100, count: 1, unique: true },
-    topic: { cat: "all" },
+    topic: { cat: "all", style: "question" }, // style：question（ふつうのお題）か letter（「あ」から始まる「〇〇」は？）
     penalty: { cat: "all", who: true }
   };
 
@@ -118,7 +118,7 @@
         return { min: Math.min(min, max), max: Math.max(min, max), count: clampInt(state.number.count, 1, 20, 1), unique: Boolean(state.number.unique) };
       }
       case "topic":
-        return { cat: state.topic.cat };
+        return state.topic.style === "letter" ? { style: "letter" } : { cat: state.topic.cat };
       case "penalty":
         return { cat: state.penalty.cat, names: state.penalty.who ? names : [] };
       default:
@@ -185,6 +185,11 @@
         return { kind: "number", nums };
       }
       case "topic": {
+        if (input.style === "letter") {
+          // 1文字＋お題：ひらがな1文字と、お題を1つずつ
+          const { letters, prompts } = data.topics.letter;
+          return { kind: "letter", letter: letters[Math.floor(rand() * letters.length)], prompt: prompts[Math.floor(rand() * prompts.length)] };
+        }
         const list = pool(data.topics, input.cat);
         return { kind: "topic", pick: list[Math.floor(rand() * list.length)] };
       }
@@ -247,6 +252,8 @@
         return { title: result.nums.join("・"), lines: [`${input.min}〜${input.max} から ${result.nums.length}つ${input.unique ? "（重ならない）" : ""}`] };
       case "topic":
         return { title: `💬 ${result.pick.text}`, lines: [`会話のお題（${result.pick.cat}）`] };
+      case "letter":
+        return { title: `「${result.letter}」から始まる「${result.prompt}」は？`, lines: ["1文字＋お題"] };
       case "penalty":
         return { title: `${result.who ? result.who + "：" : ""}${result.pick.text}`, lines: [`罰ゲーム（${result.pick.cat}）`] };
       default:
@@ -371,8 +378,13 @@
         `<div class="field"><span class="label">いくつ出す</span>${stepper("number.count", n.count, 1, 20)}</div>` +
         `<label class="check"><input type="checkbox" data-bind="number.unique" ${n.unique ? "checked" : ""}>同じ数字は出さない</label>`;
     } else if (m === "topic") {
-      form.innerHTML = `<div class="field"><span class="label">お題の種類</span>${categoryChips("topic.cat", data.topics, state.topic.cat)}</div>
-        <p class="hint">会話が止まったとき、自己紹介、飲み会の話のきっかけに。</p>`;
+      const letter = state.topic.style === "letter";
+      form.innerHTML =
+        `<div class="field"><span class="label">お題の形</span>${chips("topic.style", [["question", "ふつうのお題"], ["letter", "1文字＋お題"]], state.topic.style)}</div>` +
+        (letter
+          ? `<p class="hint">「あ」から始まる「魅力的なもの」は？ のように、ひらがな1文字とお題を一緒に引きます。順番に答えたり、早く思いついた人の勝ちにしたり。</p>`
+          : `<div class="field"><span class="label">お題の種類</span>${categoryChips("topic.cat", data.topics, state.topic.cat)}</div>
+        <p class="hint">会話が止まったとき、自己紹介、飲み会の話のきっかけに。</p>`);
     } else if (m === "penalty") {
       form.innerHTML =
         `<div class="field"><span class="label">罰ゲームの種類</span>${categoryChips("penalty.cat", data.penalties, state.penalty.cat)}</div>` +
@@ -444,6 +456,8 @@
       html += wheelSvg(r) + `<p class="big" id="rouletteWinner" hidden>🎡 ${esc(r.items[r.index])}</p>`;
     } else if (r.kind === "number") {
       html += `<div class="numbers">${r.nums.map((n) => `<b>${n}</b>`).join("")}</div>`;
+    } else if (r.kind === "letter") {
+      html += `<p class="letter-q"><span class="letter-char">${esc(r.letter)}</span><span class="letter-text">から始まる<br><b>${esc(r.prompt)}</b> は？</span></p>`;
     } else if (r.kind === "topic") {
       html += `<p class="big">${esc(r.pick.text)}</p><p class="hint" style="text-align:center">${esc(r.pick.cat)}</p>`;
     } else if (r.kind === "penalty") {

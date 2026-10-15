@@ -194,6 +194,25 @@ textarea:focus, input:focus, select:focus { outline: none; border-color: var(--a
 }
 .who { margin: 0; text-align: center; font-size: 18px; font-weight: 800; }
 
+/* 1文字＋お題：大きな1文字（くじの札のような白地に赤い枠）と、お題 */
+.letter-q { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0; }
+.letter-char {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 84px;
+  height: 84px;
+  border: 4px solid var(--accent);
+  border-radius: 18px;
+  background: #fffaf0;
+  color: var(--accent-dark);
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1;
+}
+.letter-text { font-size: 17px; font-weight: 700; line-height: 1.6; }
+.letter-text b { color: var(--accent-dark); font-size: 22px; }
+
 /* あみだ */
 .amida { width: 100%; height: auto; }
 .amida .rail { stroke: #e3cfc9; stroke-width: 4; stroke-linecap: round; }

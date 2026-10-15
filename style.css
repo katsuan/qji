@@ -121,6 +121,29 @@ textarea:focus, input:focus, select:focus { outline: none; border-color: var(--a
 }
 .stepper input { text-align: center; }
 
+/* ヒミツで引く */
+.secret {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 10px;
+  padding: 12px 14px;
+  border: 2px dashed var(--line);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.secret input { grid-row: span 2; width: 22px; height: 22px; accent-color: var(--accent); }
+.secret small { color: var(--ink-soft); font-size: 12px; font-weight: 600; }
+.secret:has(input:checked) { border-style: solid; border-color: var(--accent); background: var(--accent-soft); }
+.sealed { display: grid; justify-items: center; gap: 6px; padding: 18px 12px; border-radius: var(--radius-md); background: repeating-linear-gradient(135deg, #fff7f5, #fff7f5 10px, #ffeeea 10px, #ffeeea 20px); text-align: center; }
+.sealed-mark { font-size: 44px; line-height: 1; }
+.sealed-text { margin: 0; color: var(--accent-dark); font-size: 24px; font-weight: 800; }
+.open-sealed { width: min(100%, 260px); margin-top: 6px; background: linear-gradient(135deg, #ff7a6b, var(--accent)); color: #fff; font-size: 20px; }
+.btn[hidden] { display: none; }
+
 /* 引く！ */
 .draw {
   min-height: 60px;

@@ -24,7 +24,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <main class="wrap">
@@ -40,6 +40,8 @@
 
   <section id="form" class="card" aria-live="polite"></section>
 
+  <!-- ヒミツで引く：引いた人にも結果を見せず、受け取った人が「ひらく」を押すまで伏せておく -->
+  <label class="secret"><input id="secretToggle" type="checkbox">🙈 ヒミツで引く<small>結果を見ずに LINE で送り、みんなで「ひらく」</small></label>
   <button id="drawButton" class="draw" type="button">🎟️ 引く！</button>
 
   <!-- 結果。確かめるリンクで開いたときは、上に「同じ条件で引き直した結果」と出す -->
@@ -64,7 +66,7 @@
   <div data-tool-share></div>
 </main>
 
-<script src="app.js?v=2"></script>
+<script src="app.js?v=3"></script>
 <script src="https://katsuan.github.io/line-share/shared/tool-share.js" data-tool="qji" defer></script>
 </body>
 </html>

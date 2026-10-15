@@ -277,14 +277,33 @@
     return JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
   }
 
+  // h: 1 はヒミツで引いたもの（開いた人が「ひらく」を押すまで結果を見せない）
   function verifyUrl(d) {
-    return `${PAGE_URL}?r=${encode({ m: d.mode, s: d.seed, i: d.input, t: d.time })}`;
+    return `${PAGE_URL}?r=${encode({ m: d.mode, s: d.seed, i: d.input, t: d.time, ...(d.secret ? { h: 1 } : {}) })}`;
   }
 
   function cardUrl(d) {
     const sum = summary(d.mode, d.input, d.result);
     const mode = MODES.find((m) => m.key === d.mode);
     const detail = sum.lines.join("\n").slice(0, 300);
+    if (d.secret) {
+      // ヒミツ：カードには結果を書かない。だれが入っているか（名前）だけ出して、ひらくボタンへ
+      const who = (d.input.names || d.input.items || []).slice(0, 12).join("、");
+      const params = new URLSearchParams({
+        headerTitle: `${mode.icon} ${mode.label}`,
+        date: "くじ（Qji）",
+        showDate: "true",
+        title: "🔒 結果はひらくまでヒミツ",
+        detail: (who ? `参加：${who}\n` : "") + "せーので、みんなでひらいてね🎁",
+        theme: "custom",
+        customColor: CARD_COLOR,
+        showAction: "true",
+        actionLabel: "🎁 ひらく",
+        actionUrl: verifyUrl(d),
+        from: "qji"
+      });
+      return `${OQRN_CARD}?${params}`;
+    }
     const params = new URLSearchParams({
       headerTitle: `${mode.icon} ${mode.label}の結果`,
       date: "くじ（Qji）で決めました",
@@ -437,7 +456,9 @@
     lastDraw = null;
   }
 
-  function renderResult(d, { verified = false } = {}) {
+  function renderResult(d, { verified = false, opened = false } = {}) {
+    $("sendButton").hidden = false;
+    $("copyButton").hidden = false;
     const body = $("resultBody");
     const r = d.result;
     const mode = MODES.find((m) => m.key === d.mode);
@@ -467,7 +488,9 @@
     $("verifyNote").hidden = !verified;
     if (verified) {
       const when = d.time ? new Date(d.time).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
-      $("verifyNote").textContent = `🔍 確かめるリンクの結果です。${when ? when + " に引いたのと " : ""}同じタネ・同じ条件で引き直すと、必ずこの結果になります。`;
+      $("verifyNote").textContent = opened
+        ? `🎁 ${when ? when + " に引いた" : ""}ヒミツの結果です。だれが開いても同じ結果になります。`
+        : `🔍 確かめるリンクの結果です。${when ? when + " に引いたのと " : ""}同じタネ・同じ条件で引き直すと、必ずこの結果になります。`;
     }
     $("seedNote").textContent = `タネ：${d.seed.toString(16).padStart(8, "0")}`;
     $("sendButton").href = cardUrl(d);
@@ -557,9 +580,39 @@
       return;
     }
     const seed = newSeed();
-    lastDraw = { mode, seed, input, time: Date.now(), result: draw(mode, input, seed) };
-    renderResult(lastDraw);
+    lastDraw = { mode, seed, input, time: Date.now(), result: draw(mode, input, seed), secret: $("secretToggle").checked };
+    if (lastDraw.secret) renderSealed(lastDraw, { sender: true });
+    else renderResult(lastDraw);
   });
+
+  // ヒミツで引いたとき：結果を伏せた札を見せる。送る人には「送る」ボタン、受け取った人には「ひらく」ボタン
+  function renderSealed(d, { sender = false } = {}) {
+    const mode = MODES.find((m) => m.key === d.mode);
+    $("resultBody").innerHTML =
+      `<p class="result-title">${mode.icon} ${mode.label}</p>` +
+      `<div class="sealed"><span class="sealed-mark" aria-hidden="true">🔒</span><p class="sealed-text">結果はヒミツ</p>` +
+      (sender
+        ? `<p class="hint">あなたにも見えていません。LINE で送って、みんなで「ひらく」を押してね。</p>`
+        : `<p class="hint">せーので、ひらいてね</p><button id="openSealed" class="btn open-sealed" type="button">🎁 ひらく</button>`) +
+      `</div>`;
+    $("verifyNote").hidden = true;
+    $("seedNote").textContent = "";
+    $("sendButton").href = cardUrl(d);
+    $("sendButton").hidden = !sender;
+    $("copyButton").hidden = !sender;
+    $("copyButton").textContent = "🔗 ひらくリンクをコピー";
+    $("status").textContent = "";
+    $("result").hidden = false;
+    requestAnimationFrame(() => $("result").scrollIntoView({ behavior: "smooth", block: "start" }));
+    if (!sender) {
+      $("openSealed").addEventListener("click", () => {
+        $("sendButton").hidden = false;
+        $("copyButton").hidden = false;
+        $("copyButton").textContent = "🔗 確かめるリンクをコピー";
+        renderResult({ ...d, secret: false }, { verified: true, opened: true });
+      });
+    }
+  }
 
   $("sendButton").addEventListener("click", (event) => {
     if (!lastDraw) event.preventDefault();
@@ -599,8 +652,9 @@
       state.mode = v.m;
       renderModes();
       renderForm();
-      lastDraw = { mode: v.m, seed: v.s >>> 0, input, time: v.t, result };
-      renderResult(lastDraw, { verified: true });
+      lastDraw = { mode: v.m, seed: v.s >>> 0, input, time: v.t, result, secret: v.h === 1 };
+      if (lastDraw.secret) renderSealed(lastDraw);
+      else renderResult(lastDraw, { verified: true });
     } catch (error) {
       console.error(error);
       $("result").hidden = false;

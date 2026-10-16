@@ -189,7 +189,7 @@ def main():
     BRAND.write_icons(ROOT, shapes)
     logo, ratio = logo_svg()
     (ROOT / "logo.svg").write_text(logo, encoding="utf-8")
-    BRAND.write_ogp(ROOT / "ogp.png", shapes, "くじ", "Qji", ["くじ引き・あみだ・ルーレット", "お題も罰ゲームも、ここで決まる"], decorate)
+    BRAND.write_ogp(ROOT / "ogp.png", shapes, "くじ", "Qji", ["くじ引き・あみだ・ルーレット", "お題も罰ゲームも、ここで決まる"], decorate, copy="迷ったら、くじで決めよう")
     print(f"アイコン・logo.svg（高さ 28px なら幅 {28 * ratio:.0f}px）・ogp.png を書き出しました")
 
 

@@ -7,7 +7,8 @@ Q はおみくじの筒（いただいた絵を 90 度回した向き）：六�
 真ん中の穴から右下へ出たみくじ棒（赤い先）が脚。アイコンは横長のロゴの Q を切り出し、上の面とみくじ棒を大きく真ん中に置いたもの（左上へ伸びる胴はアイコンの枠で切れる）。
 
   icon.svg・icon-32.png・apple-touch-icon.png・icon-512.png・icon-maskable-512.png … アイコン
-  logo.svg … 横長のロゴ「Qji」。みくじ棒の先を j の下の曲がりが手のように受け止める（j は棒の裏側）。j・i は Jua
+  logo.svg … 横長のロゴ「Qji」。みくじ棒の先を j の下の曲がりが手のように受け止める（j は棒の裏側）。j・i は Jua。
+             Q（筒とみくじ棒）は白い枠で囲み、赤い地から浮かせる
   ogp.png  … 共有したときの画像（1200×630）
 
 使い方: python3 tools/icon.py（となりのおくるん（q-oqrn）の tools/brandkit.py を使う）
@@ -164,15 +165,23 @@ def logo_svg():
     pad_x, pad_y = h * 0.5, h * 0.36
     x0, y0 = min(x0s, 0) - pad_x, min(y0s, 0) - pad_y
     width, height = max(x1s, right) + pad_x - x0, max(y1s, top + 130) + pad_y - y0
+    # Q（筒とみくじ棒）のまわりに白い枠：形をひとまわり太らせた白を、後ろに敷く
+    halo = h * 0.045
+    halo_filter = (
+        f'<filter id="halo" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">'
+        f'<feMorphology in="SourceAlpha" operator="dilate" radius="{num(halo)}" result="grow"/>'
+        '<feFlood flood-color="#ffffff"/><feComposite in2="grow" operator="in" result="edge"/>'
+        '<feMerge><feMergeNode in="edge"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+    )
     svg = (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{num(x0)} {num(y0)} {num(width)} {num(height)}" role="img" aria-label="Qji（くじ）">'
-        f"<defs>{BRAND.gradient_svg(x0, y0, width, height)}</defs>"
+        f"<defs>{BRAND.gradient_svg(x0, y0, width, height)}{halo_filter}</defs>"
         f'<rect x="{num(x0)}" y="{num(y0)}" width="{num(width)}" height="{num(height)}" rx="{num(h * 0.3)}" fill="url(#g)"/>'
         # 字（j・i）は裏側に。みくじ棒の先が j の下の曲がり（手のひら）に乗る
         + f'<g fill="#ffffff" stroke="url(#g)" stroke-width="{num(h * 0.05)}" stroke-linejoin="round">'
         + "".join(f'<path d="{d}"/>' for d in letters)
         + "</g>"
-        + BRAND.shapes_svg(shapes)
+        + '<g filter="url(#halo)">' + BRAND.shapes_svg(shapes) + "</g>"
         + "</svg>\n"
     )
     return svg, width / height

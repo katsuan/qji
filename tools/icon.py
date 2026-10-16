@@ -10,12 +10,12 @@ Q はおみくじの筒（いただいた絵を 90 度回した向き）：六�
   logo.svg … 横長のロゴ「Qji」。みくじ棒の先を j の下の曲がりが手のように受け止める（j は棒の裏側）。j・i は Jua
   ogp.png  … 共有したときの画像（1200×630）
 
-使い方: python3 tools/icon.py（となりの line-share/tools/brandkit.py を使う）
+使い方: python3 tools/icon.py（となりのおくるん（q-oqrn）の tools/brandkit.py を使う）
 """
 import math
 from pathlib import Path
 
-import brandkit_path  # noqa: F401（となりの line-share/tools/brandkit.py を読めるようにする）
+import brandkit_path  # noqa: F401（となりのおくるん（q-oqrn）の tools/brandkit.py を読めるようにする）
 from brandkit import FONT_PATH, Brand, centered, shapes_bounds
 
 ROOT = Path(__file__).resolve().parent.parent

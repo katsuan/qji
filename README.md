@@ -50,7 +50,7 @@
 
 ## アイコン・ロゴ・OGP
 
-`python3 tools/icon.py` で作る（図形を描く部分は、となりの line-share の `tools/brandkit.py`。pomodoro・countdown・gender-reveal・line-p2p-othello も同じものを使う）。
+`python3 tools/icon.py` で作る（図形を描く部分は、となりのおくるん（`~/GitHub/q-oqrn`。GitHub のリポジトリ名は line-share）の `tools/brandkit.py`。pomodoro・countdown・gender-reveal・line-p2p-othello も同じものを使う）。
 
 - Q はおみくじの筒（筒を 90 度回した向き）：六角の上の面（木の色・太い黒ふち）が輪、胴は左やや上へ伸びて白地に赤い枠の札、真ん中の穴から右下へ出たみくじ棒（赤い先）が脚
 - 横長のロゴ（`logo.svg`）：みくじ棒の先を j の下の曲がりが手のように受け止める（j は棒の裏側）。j・i は Jua

@@ -63,6 +63,9 @@ body {
 .mode span { font-size: 22px; line-height: 1.1; }
 .mode.is-active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
 
+/* hidden を付けた要素は、display を指定したクラス（.card など）があっても必ず隠す */
+[hidden] { display: none !important; }
+
 .card {
   display: grid;
   gap: 12px;

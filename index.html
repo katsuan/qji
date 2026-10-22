@@ -24,44 +24,48 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=202610211350">
+<!-- Q キット（おくるんの共通部品）。色と字は style.css の :root で、くじの色に -->
+<link rel="stylesheet" href="https://katsuan.github.io/line-share/shared/ui.css">
+<link rel="stylesheet" href="style.css?v=202610221012">
 </head>
 <body>
-<main class="wrap">
+<main class="ls-page ls-stack">
   <!-- 見出しの行：アイコン＋名前（左）と横長のロゴ（右）。ほかのツール（さくせん盤・キロっく・ひっくり）と同じ形 -->
-  <header class="brand">
-    <h1 class="brand-name"><img class="brand-icon" src="icon.svg" alt="" width="30" height="30">くじ</h1>
-    <img class="brand-logo" src="logo.svg" alt="Qji" width="40" height="28">
+  <header class="ls-brand">
+    <h1 class="ls-brand-name"><img class="ls-brand-icon" src="icon.svg" alt="" width="30" height="30">くじ</h1>
+    <img class="ls-brand-logo" src="logo.svg" alt="Qji" width="40" height="28">
   </header>
-  <p class="brand-copy">迷ったら、くじで決めよう</p>
-  <p class="lead tool-only">当番・順番・チーム分け・お題・罰ゲーム。<br>その場で公平に決めて、LINE で送れます。</p>
+  <p class="ls-brand-copy">迷ったら、くじで決めよう</p>
+  <p class="ls-hint lead tool-only">当番・順番・チーム分け・お題・罰ゲーム。<br>その場で公平に決めて、LINE で送れます。</p>
 
   <!-- 決め方（モード）。押すと下の入力が切り替わる -->
   <nav id="modes" class="modes tool-only" aria-label="決め方"></nav>
 
-  <section id="form" class="card tool-only" aria-live="polite"></section>
+  <section id="form" class="ls-panel tool-only" aria-live="polite"></section>
 
   <!-- ヒミツで引く：引いた人にも結果を見せず、受け取った人が「ひらく」を押すまで伏せておく -->
   <label class="secret tool-only"><input id="secretToggle" type="checkbox">🙈 ヒミツで引く<small>結果を見ずに LINE で送り、みんなで「ひらく」</small></label>
   <button id="drawButton" class="draw tool-only" type="button">🎟️ 引く！</button>
 
   <!-- 結果。確かめるリンクで開いたときは、上に「同じ条件で引き直した結果」と出す -->
-  <section id="result" class="card result" hidden>
+  <section id="result" class="ls-panel result" hidden>
     <p id="verifyNote" class="verify-note" hidden></p>
     <div id="resultBody"></div>
     <p id="seedNote" class="seed-note"></p>
     <div class="actions">
-      <a id="sendButton" class="btn line" href="#">💬 LINEで送る<small>（おくるん）</small></a>
-      <button id="copyButton" class="btn ghost" type="button">🔗 確かめるリンクをコピー</button>
-      <a class="btn ghost result-page-only" href="./">🎟️ 新しくくじを引く</a>
+      <a id="sendButton" class="ls-button is-block line" href="#">💬 LINEで送る<small>（おくるん）</small></a>
+      <button id="copyButton" class="ls-button is-block" type="button">🔗 確かめるリンクをコピー</button>
+      <a class="ls-button is-block result-page-only" href="./">🎟️ 新しくくじを引く</a>
     </div>
     <p id="status" class="status" role="status"></p>
   </section>
 
-  <details class="card about tool-only">
-    <summary>🔍 公平に決まる仕組み</summary>
+  <details class="ls-fold about tool-only">
+    <summary><span class="ls-fold-icon" aria-hidden="true">🔍</span>公平に決まる仕組み</summary>
+    <div class="ls-fold-body">
     <p>引くたびに、ランダムな「タネ」（数字）を1つ作り、そのタネと入れた名前などから結果を決めます。</p>
     <p>「確かめるリンク」を開くと、同じタネと同じ条件でもう一度引き直すので、だれが開いても必ず同じ結果になります。あとから都合よく引き直していないことを、みんなで確かめられます。</p>
+    </div>
   </details>
 
   <!-- 「📤 くじを紹介する」：おくるんで紹介カードを送る窓口（line-share/shared/tool-share.js。中身は line-share/data/hub-links.json） -->
@@ -70,7 +74,9 @@
 
 <!-- おくるんのカードの入口（LIFF ID とカードの URL は line-share の shared/oqrn.js に1か所） -->
 <script src="https://katsuan.github.io/line-share/shared/oqrn.js"></script>
-<script type="module" src="app.js?v=202610211350"></script>
+<!-- Q キットの動き（トーストなど） -->
+<script src="https://katsuan.github.io/line-share/shared/ui.js" defer></script>
+<script type="module" src="app.js?v=202610221012"></script>
 <script src="https://katsuan.github.io/line-share/shared/tool-share.js" data-tool="qji" defer></script>
 </body>
 </html>

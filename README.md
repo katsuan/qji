@@ -48,6 +48,8 @@
 
 おくるんのカードの URL（LIFF ID）は line-share の `shared/oqrn.js` から読む。
 
+部品（見出しの行・カード・チップ・入力欄・ボタン・開閉・トースト）はおくるんの Q キット（`https://katsuan.github.io/line-share/shared/ui.css`・`ui.js`。使い方はおくるんの README）。`style.css` には、くじの色と字（`:root` の `--ls-accent` など）と、くじにしかない見た目（決め方のボタン・引く！・結果・あみだ・ルーレット・ヒミツの札）だけを置く。
+
 ## アイコン・ロゴ・OGP
 
 `python3 tools/icon.py` で作る（図形を描く部分は、となりのおくるん（`~/GitHub/q-oqrn`。GitHub のリポジトリ名は line-share）の `tools/brandkit.py`。pomodoro・countdown・gender-reveal・line-p2p-othello も同じものを使う）。

@@ -1,6 +1,6 @@
 // 画面：結果（ふつうの結果・ヒミツの札・まだ引けないときの理由）。あみだとルーレットの図もここ
-import { cardUrl } from "./link.js?v=202610211350";
-import { $, esc, findMode, teamName } from "./modes.js?v=202610211350";
+import { cardUrl } from "./link.js?v=202610221012";
+import { $, esc, findMode, teamName } from "./modes.js?v=202610221012";
 
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -33,7 +33,7 @@ const BODIES = {
   roulette: (r) => wheelSvg(r) + `<p class="big" id="rouletteWinner" hidden>🎡 ${esc(r.items[r.index])}</p>`,
   number: (r) => `<div class="numbers">${r.nums.map((n) => `<b>${n}</b>`).join("")}</div>`,
   letter: (r) => `<p class="letter-q"><span class="letter-char">${esc(r.letter)}</span><span class="letter-text">から始まる<br><b>${esc(r.prompt)}</b> は？</span></p>`,
-  topic: (r) => `<p class="big">${esc(r.pick.text)}</p><p class="hint" style="text-align:center">${esc(r.pick.cat)}</p>`,
+  topic: (r) => `<p class="big">${esc(r.pick.text)}</p><p class="ls-hint" style="text-align:center">${esc(r.pick.cat)}</p>`,
   penalty: (r) => (r.who ? `<p class="who">😈 ${esc(r.who)} さん</p>` : "") + `<p class="big">${esc(r.pick.text)}</p>`
 };
 
@@ -61,8 +61,8 @@ export function renderSealed(d, { sender = false } = {}) {
     `<p class="result-title">${mode.icon} ${mode.label}</p>` +
     `<div class="sealed"><span class="sealed-mark" aria-hidden="true">🔒</span><p class="sealed-text">結果はヒミツ</p>` +
     (sender
-      ? `<p class="hint">あなたにも見えていません。LINE で送って、みんなで「ひらく」を押してね。</p>`
-      : `<p class="hint">せーので、ひらいてね</p><button id="openSealed" class="btn open-sealed" type="button">🎁 ひらく</button>`) +
+      ? `<p class="ls-hint">あなたにも見えていません。LINE で送って、みんなで「ひらく」を押してね。</p>`
+      : `<p class="ls-hint">せーので、ひらいてね</p><button id="openSealed" class="ls-button open-sealed" type="button">🎁 ひらく</button>`) +
     `</div>`;
   $("verifyNote").hidden = true;
   $("seedNote").textContent = "";
@@ -75,7 +75,7 @@ export function renderSealed(d, { sender = false } = {}) {
 // まだ引けないとき：理由だけを出す
 export function renderProblem(reason) {
   $("result").hidden = false;
-  $("resultBody").innerHTML = `<p class="hint" style="text-align:center">${esc(reason)}</p>`;
+  $("resultBody").innerHTML = `<p class="ls-hint" style="text-align:center">${esc(reason)}</p>`;
   $("verifyNote").hidden = true;
   $("seedNote").textContent = "";
   $("sendButton").removeAttribute("href");

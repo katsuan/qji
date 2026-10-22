@@ -53,14 +53,14 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .check { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
 .check input { width: 20px; height: 20px; accent-color: var(--ls-accent); }
 .check:has(input:disabled) { color: var(--ls-subtext); }
-.used { display: grid; justify-items: start; gap: 6px; padding: 10px 12px; border-radius: var(--ls-radius-md); background: #fff7f5; }
+.used { display: grid; justify-items: start; gap: 6px; padding: 10px 12px; border-radius: var(--ls-radius-md); background: var(--ls-surface-sub); }
 .used .hint { word-break: break-all; }
 .stepper { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 6px; align-items: center; }
 .stepper button {
   height: 44px;
   border: 2px solid var(--ls-line);
   border-radius: var(--ls-radius-md);
-  background: #fff;
+  background: var(--ls-surface);
   color: var(--ls-text);
   font: inherit;
   font-size: 20px;
@@ -78,7 +78,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   padding: 12px 14px;
   border: 2px dashed var(--ls-line);
   border-radius: var(--ls-radius-md);
-  background: #fff;
+  background: var(--ls-surface);
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
@@ -128,7 +128,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   gap: 10px;
   padding: 10px 12px;
   border-radius: var(--ls-radius-md);
-  background: #fff7f5;
+  background: var(--ls-surface-sub);
   font-size: 16px;
   font-weight: 700;
 }
@@ -141,12 +141,12 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   height: 30px;
   padding: 0 6px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--ls-surface);
   color: var(--ls-accent-ink);
   font-size: 14px;
 }
 .teams { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
-.team { padding: 10px 12px; border-radius: var(--ls-radius-md); background: #fff7f5; }
+.team { padding: 10px 12px; border-radius: var(--ls-radius-md); background: var(--ls-surface-sub); }
 .team h3 { margin: 0 0 4px; color: var(--ls-accent-ink); font-size: 15px; }
 .team p { margin: 0; font-size: 15px; line-height: 1.7; }
 .numbers { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
@@ -174,7 +174,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   height: 84px;
   border: 4px solid var(--ls-accent);
   border-radius: 18px;
-  background: #fffaf0;
+  background: var(--ls-surface-sub);
   color: var(--ls-accent-ink);
   font-size: 52px;
   font-weight: 800;
@@ -224,3 +224,11 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 
 /* キャッチコピー（見出しの行のすぐ下。Q キットの ls-brand-copy を、くじの赤に） */
 .ls-brand-copy { color: var(--ls-accent); font-size: 13px; letter-spacing: 0.02em; }
+
+/* ---- 暗い表示（index.html の data-ls-dark="auto"。色の名前は ui.css の --ls-*） ---- */
+@media (prefers-color-scheme: dark) {
+  :root[data-ls-dark="auto"] body { background: radial-gradient(circle at top right, rgba(226, 62, 74, 0.18), transparent 40%), var(--ls-bg); }
+  :root[data-ls-dark="auto"] .sealed { background: repeating-linear-gradient(135deg, var(--ls-surface-sub), var(--ls-surface-sub) 10px, var(--ls-surface) 10px, var(--ls-surface) 20px); }
+  :root[data-ls-dark="auto"] .verify-note { background: #17301f; color: #8fe0a8; }
+  :root[data-ls-dark="auto"] .amida .rail { stroke: rgba(255, 255, 255, 0.25); }
+}

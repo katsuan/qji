@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-ls-dark="auto">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -16,7 +16,8 @@
 <meta property="og:image:alt" content="くじ（Qji）：くじ引き・あみだ・ルーレット・お題・罰ゲーム">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#fff4f1">
+<meta name="theme-color" content="#fff4f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1416" media="(prefers-color-scheme: dark)">
 <!-- アイコン・ロゴ・OGP は tools/icon.py で作る -->
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="icon-32.png" type="image/png" sizes="32x32">
@@ -26,7 +27,7 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
 <!-- Q キット（おくるんの共通部品）。色と字は style.css の :root で、くじの色に -->
 <link rel="stylesheet" href="https://katsuan.github.io/line-share/shared/ui.css">
-<link rel="stylesheet" href="style.css?v=202610221012">
+<link rel="stylesheet" href="style.css?v=202610221446">
 </head>
 <body>
 <main class="ls-page ls-stack">
@@ -36,7 +37,7 @@
     <img class="ls-brand-logo" src="logo.svg" alt="Qji" width="40" height="28">
   </header>
   <p class="ls-brand-copy">迷ったら、くじで決めよう</p>
-  <p class="ls-hint lead tool-only">当番・順番・チーム分け・お題・罰ゲーム。<br>その場で公平に決めて、LINE で送れます。</p>
+  <p class="ls-hint lead tool-only">当番・順番・チーム分けを、公平に決めて送れます。</p>
 
   <!-- 決め方（モード）。押すと下の入力が切り替わる -->
   <nav id="modes" class="modes tool-only" aria-label="決め方"></nav>
@@ -76,7 +77,9 @@
 <script src="https://katsuan.github.io/line-share/shared/oqrn.js"></script>
 <!-- Q キットの動き（トーストなど） -->
 <script src="https://katsuan.github.io/line-share/shared/ui.js" defer></script>
-<script type="module" src="app.js?v=202610221012"></script>
+<script type="module" src="app.js?v=202610221446"></script>
 <script src="https://katsuan.github.io/line-share/shared/tool-share.js" data-tool="qji" defer></script>
+<!-- 電波がなくても開けるように（sw.js） -->
+<script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});</script>
 </body>
 </html>

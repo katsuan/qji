@@ -9,13 +9,13 @@
 //   js/state.js  入力の状態・保存・確かめ      js/draw.js    引く・結果の文
 //   js/link.js   確かめるリンク・カードの URL  js/form.js    画面：決め方と入力
 //   js/result.js 画面：結果・ヒミツの札・図    app.js        操作とはじめ（このファイル）
-import { draw } from "./js/draw.js?v=202610221012";
-import { renderForm, renderModes } from "./js/form.js?v=202610221012";
-import { decode, verifyUrl } from "./js/link.js?v=202610221012";
-import { $, isMode } from "./js/modes.js?v=202610221012";
-import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610221012";
-import { newSeed } from "./js/rng.js?v=202610221012";
-import { clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610221012";
+import { draw } from "./js/draw.js?v=202610221446";
+import { renderForm, renderModes } from "./js/form.js?v=202610221446";
+import { decode, verifyUrl } from "./js/link.js?v=202610221446";
+import { $, isMode } from "./js/modes.js?v=202610221446";
+import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610221446";
+import { newSeed } from "./js/rng.js?v=202610221446";
+import { clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610221446";
 
 const data = { topics: null, penalties: null }; // お題・罰ゲーム（data/*.json）
 let lastDraw = null; // { mode, seed, input, time, result, secret }
@@ -39,9 +39,17 @@ $("form").addEventListener("input", (event) => {
 
 $("form").addEventListener("click", (event) => {
   if (event.target.closest("[data-reset-used]")) {
-    if (!window.confirm("出た数字をリセットして、はじめから引きますか？")) return;
+    // 消したあとに「元に戻す」を出す（聞かずに消す）
+    const before = [...(getValue("number.used") || [])];
     setValue("number.used", []);
     renderForm(data);
+    window.LineShareUI?.toast("出た数字をリセットしました", {
+      actionLabel: "元に戻す",
+      onAction: () => {
+        setValue("number.used", before);
+        renderForm(data);
+      }
+    });
     return;
   }
   const chip = event.target.closest("[data-chip]");

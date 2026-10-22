@@ -1,6 +1,6 @@
 // 画面：結果（ふつうの結果・ヒミツの札・まだ引けないときの理由）。あみだとルーレットの図もここ
-import { cardUrl } from "./link.js?v=202610221616";
-import { $, esc, findMode, teamName } from "./modes.js?v=202610221616";
+import { cardUrl } from "./link.js?v=202610222216";
+import { $, esc, findMode, teamName } from "./modes.js?v=202610222216";
 
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -31,7 +31,7 @@ const BODIES = {
       .map((p, i) => `<li${/あたり|当/.test(r.goals[p.end]) ? ' class="is-win"' : ""}><span class="no">${i + 1}</span>${esc(r.names[i])} → ${esc(r.goals[p.end])}</li>`)
       .join("")}</ul>`,
   roulette: (r) => wheelSvg(r) + `<p class="big" id="rouletteWinner" hidden>🎡 ${esc(r.items[r.index])}</p>`,
-  number: (r) => `<div class="numbers">${r.nums.map((n) => `<b>${n}</b>`).join("")}</div>`,
+  number: (r) => `<div class="numbers">${r.nums.map((n) => `<b>${esc(n)}</b>`).join("")}</div>`,
   letter: (r) => `<p class="letter-q"><span class="letter-char">${esc(r.letter)}</span><span class="letter-text">から始まる<br><b>${esc(r.prompt)}</b> は？</span></p>`,
   topic: (r) => `<p class="big">${esc(r.pick.text)}</p><p class="ls-hint" style="text-align:center">${esc(r.pick.cat)}</p>`,
   penalty: (r) => (r.who ? `<p class="who">😈 ${esc(r.who)} さん</p>` : "") + `<p class="big">${esc(r.pick.text)}</p>`
@@ -42,11 +42,12 @@ export function renderResult(d, { verified = false } = {}) {
   const r = d.result;
   const mode = findMode(d.mode);
   setActions({ send: true, copyLabel: "🔗 確かめるリンクをコピー" });
+  // qcheck-ok: W1 mode は決まった一覧（MODES）のもの。中身は BODIES の中で esc している
   $("resultBody").innerHTML = `<p class="result-title">${mode.icon} ${mode.label}の結果</p>` + (BODIES[r.kind] || (() => ""))(r);
   $("verifyNote").hidden = true;
   const when = verified && d.time ? new Date(d.time).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
   $("seedNote").innerHTML =
-    `タネ：${d.seed.toString(16).padStart(8, "0")}${when ? `（${esc(when)} に引いた結果）` : ""}` +
+    `タネ：${esc((d.seed >>> 0).toString(16)).padStart(8, "0")}${when ? `（${esc(when)} に引いた結果）` : ""}` +
     `<br>同じタネと同じ条件なら、だれが開いても必ずこの結果になります。`;
   $("sendButton").href = cardUrl(d);
   showResultCard();

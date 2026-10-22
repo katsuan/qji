@@ -42,9 +42,10 @@
 | `js/rng.js` | 乱数（タネ・mulberry32・並べ替え） |
 | `js/state.js` | 入力の状態・端末への保存・引けるかどうか |
 | `js/draw.js` | 引く（タネと入力だけから結果を決める）・結果の文 |
-| `js/link.js` | 確かめるリンク・おくるんのカードの URL |
+| `js/link.js` | 確かめるリンク（読むときは、引くときと同じ形・範囲にそろえてから）・おくるんのカードの URL |
 | `js/form.js` | 画面：決め方のボタンと、モードごとの入力 |
 | `js/result.js` | 画面：結果・ヒミツの札・あみだとルーレットの図 |
+| `test/` | リンクを読む・引くのテスト（`node --test test/`。`package.json` は node に js/ を読ませるためだけ） |
 
 おくるんのカードの URL（LIFF ID）は line-share の `shared/oqrn.js` から読む。
 

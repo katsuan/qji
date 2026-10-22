@@ -9,13 +9,13 @@
 //   js/state.js  入力の状態・保存・確かめ      js/draw.js    引く・結果の文
 //   js/link.js   確かめるリンク・カードの URL  js/form.js    画面：決め方と入力
 //   js/result.js 画面：結果・ヒミツの札・図    app.js        操作とはじめ（このファイル）
-import { draw } from "./js/draw.js?v=202610221616";
-import { renderForm, renderModes } from "./js/form.js?v=202610221616";
-import { decode, verifyUrl } from "./js/link.js?v=202610221616";
-import { $, isMode } from "./js/modes.js?v=202610221616";
-import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610221616";
-import { newSeed } from "./js/rng.js?v=202610221616";
-import { clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610221616";
+import { draw } from "./js/draw.js?v=202610222216";
+import { renderForm, renderModes } from "./js/form.js?v=202610222216";
+import { readLink, verifyUrl } from "./js/link.js?v=202610222216";
+import { $ } from "./js/modes.js?v=202610222216";
+import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610222216";
+import { newSeed } from "./js/rng.js?v=202610222216";
+import { clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610222216";
 
 const data = { topics: null, penalties: null }; // お題・罰ゲーム（data/*.json）
 let lastDraw = null; // { mode, seed, input, time, result, secret }
@@ -125,15 +125,10 @@ async function loadData() {
 // 確かめるリンク（?r=）で開いたとき：同じタネ・同じ条件で引き直して、結果だけ見せる
 function openLink(r) {
   try {
-    const v = decode(r);
-    if (!isMode(v.m)) throw new Error("mode");
-    const input = v.i || {};
-    const result = draw(v.m, input, v.s >>> 0, data);
-    if (!result) throw new Error("draw");
-    state.mode = v.m;
+    lastDraw = readLink(r, data);
+    state.mode = lastDraw.mode;
     renderModes(pickMode);
     renderForm(data);
-    lastDraw = { mode: v.m, seed: v.s >>> 0, input, time: v.t, result, secret: v.h === 1 };
     // 結果ページ：決め方・入力・引くボタンは隠して、結果だけ見せる（新しく引くときは下のボタンから）
     document.body.classList.add("is-result-page");
     if (lastDraw.secret) renderSealed(lastDraw);
@@ -155,7 +150,11 @@ function showLoading() {
 
 async function init() {
   const r = new URLSearchParams(location.search).get("r");
-  if (r) showLoading();
+  if (r) {
+    // 結果のリンクには名前が入るので、検索に出さない
+    document.head.append(Object.assign(document.createElement("meta"), { name: "robots", content: "noindex" }));
+    showLoading();
+  }
   renderModes(pickMode);
   renderForm(data);
   // はじめての人にだけ、使い方を3つ（結果を見に来た人には出さない）

@@ -1,7 +1,8 @@
 // 確かめるリンク（?r=<base64url(JSON)>）と、おくるんで送るカードの URL
 // d（引いた結果）は { mode, seed, input, time, result, secret }
-import { summary } from "./draw.js?v=202610221616";
-import { findMode } from "./modes.js?v=202610221616";
+import { draw, summary } from "./draw.js?v=202610222216";
+import { findMode, isMode } from "./modes.js?v=202610222216";
+import { clampInt, problem } from "./state.js?v=202610222216";
 
 const PAGE_URL = "https://katsuan.github.io/qji/";
 const CARD_COLOR = "#E23E4A"; // ロゴのコーラルの赤
@@ -17,6 +18,61 @@ export function decode(text) {
   const b64 = text.replace(/-/g, "+").replace(/_/g, "/");
   const bin = atob(b64 + "===".slice((b64.length + 3) % 4));
   return JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
+}
+
+// ---- 確かめるリンクを読む（外から来た中身なので、引くときと同じ形・範囲にそろえてから使う） ----
+const MAX_LINK = 8000; // ?r= の長さの上限（名前 40 人でも 3000 字ほど）
+const MAX_TEXT = 200; // 名前・項目 1つの長さ
+const MAX_ITEMS = 40; // 名前・項目の数（入力の lines() と同じ）
+const KEY_RE = /^[a-z0-9_-]{1,20}$/i;
+
+const texts = (v) =>
+  (Array.isArray(v) ? v : [])
+    .filter((s) => typeof s === "string" || typeof s === "number")
+    .map((s) => String(s).slice(0, MAX_TEXT))
+    .filter((s) => s.trim())
+    .slice(0, MAX_ITEMS);
+const oneOf = (v, list, fallback) => (list.includes(v) ? v : fallback);
+const key = (v) => (typeof v === "string" && KEY_RE.test(v) ? v : "all");
+
+export function cleanInput(mode, i) {
+  const v = i && typeof i === "object" && !Array.isArray(i) ? i : {};
+  switch (mode) {
+    case "lottery":
+      return { names: texts(v.names), type: oneOf(v.type, ["win", "order", "team"], "win"), wins: clampInt(v.wins, 1, 39, 1), teams: clampInt(v.teams, 2, 10, 2) };
+    case "amida":
+      return { names: texts(v.names), goals: texts(v.goals) };
+    case "roulette":
+      return { items: texts(v.items) };
+    case "number": {
+      const min = clampInt(v.min, -99999, 99999, 1);
+      const max = clampInt(v.max, -99999, 99999, 100);
+      const lo = Math.min(min, max), hi = Math.max(min, max);
+      const exclude = [...new Set((Array.isArray(v.exclude) ? v.exclude : []).filter((n) => Number.isInteger(n) && n >= lo && n <= hi))].sort((a, b) => a - b);
+      return { min: lo, max: hi, count: clampInt(v.count, 1, 20, 1), unique: v.unique === true, ...(exclude.length ? { exclude } : {}) };
+    }
+    case "topic":
+      return v.style === "letter" ? { style: "letter" } : { cat: key(v.cat) };
+    case "penalty":
+      return { cat: key(v.cat), names: texts(v.names) };
+    default:
+      return {};
+  }
+}
+
+// ?r= の文字から、引いた結果 { mode, seed, input, time, result, secret } を作る。読めないときは投げる
+export function readLink(r, data) {
+  if (typeof r !== "string" || !r || r.length > MAX_LINK || !/^[A-Za-z0-9_-]+$/.test(r)) throw new Error("link");
+  const v = decode(r);
+  if (!v || typeof v !== "object" || !isMode(v.m)) throw new Error("mode");
+  const input = cleanInput(v.m, v.i);
+  // 引けない条件（人数が足りない・数字が足りないなど）のリンクは読まない
+  if (problem(v.m, input, data)) throw new Error("input");
+  const seed = Number(v.s) >>> 0;
+  const result = draw(v.m, input, seed, data);
+  if (!result || (result.kind === "topic" || result.kind === "penalty" ? !result.pick : false)) throw new Error("draw");
+  const time = Number.isFinite(v.t) && v.t > 0 && v.t < 1e14 ? v.t : 0;
+  return { mode: v.m, seed, input, time, result, secret: v.h === 1 };
 }
 
 // h: 1 はヒミツで引いたもの（開いた人が「ひらく」を押すまで結果を見せない）

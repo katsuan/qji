@@ -9,19 +9,20 @@
 //   js/state.js  入力の状態・保存・確かめ      js/draw.js    引く・結果の文
 //   js/link.js   確かめるリンク・カードの URL  js/form.js    画面：決め方と入力
 //   js/result.js 画面：結果・ヒミツの札・図    app.js        操作とはじめ（このファイル）
-import { draw } from "./js/draw.js?v=202610221446";
-import { renderForm, renderModes } from "./js/form.js?v=202610221446";
-import { decode, verifyUrl } from "./js/link.js?v=202610221446";
-import { $, isMode } from "./js/modes.js?v=202610221446";
-import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610221446";
-import { newSeed } from "./js/rng.js?v=202610221446";
-import { clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610221446";
+import { draw } from "./js/draw.js?v=202610221616";
+import { renderForm, renderModes } from "./js/form.js?v=202610221616";
+import { decode, verifyUrl } from "./js/link.js?v=202610221616";
+import { $, isMode } from "./js/modes.js?v=202610221616";
+import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610221616";
+import { newSeed } from "./js/rng.js?v=202610221616";
+import { clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610221616";
 
 const data = { topics: null, penalties: null }; // お題・罰ゲーム（data/*.json）
 let lastDraw = null; // { mode, seed, input, time, result, secret }
 
 function pickMode(key) {
   state.mode = key;
+  showDrawError("");
   saveState();
   renderModes(pickMode);
   renderForm(data);
@@ -30,7 +31,14 @@ function pickMode(key) {
 }
 
 // ---- 入力 ----
+// まだ引けない理由は、入力のすぐ下（引くボタンの上）に赤い文字で。入れ直したら消す
+function showDrawError(reason) {
+  $("drawError").textContent = reason;
+  $("drawError").hidden = !reason;
+}
+
 $("form").addEventListener("input", (event) => {
+  showDrawError("");
   const el = event.target.closest("[data-bind]");
   if (!el) return;
   setValue(el.dataset.bind, el.type === "checkbox" ? el.checked : el.value);
@@ -54,6 +62,7 @@ $("form").addEventListener("click", (event) => {
   }
   const chip = event.target.closest("[data-chip]");
   if (chip) {
+    showDrawError("");
     setValue(chip.dataset.chip, chip.dataset.value);
     renderForm(data);
     return;
@@ -73,8 +82,9 @@ $("drawButton").addEventListener("click", () => {
   const mode = state.mode;
   const input = currentInput(mode);
   const reason = problem(mode, input, data);
+  showDrawError(reason);
   if (reason) {
-    renderProblem(reason);
+    $("result").hidden = true;
     return;
   }
   const seed = newSeed();
@@ -101,7 +111,8 @@ $("copyButton").addEventListener("click", async () => {
     if (window.LineShareUI?.toast) window.LineShareUI.toast("確かめるリンクをコピーしました");
     else $("status").textContent = "確かめるリンクをコピーしました。";
   } catch {
-    window.prompt("このリンクをコピーしてください", url);
+    // コピーできないとき：長押しで選べる文字で出す（ブラウザの小窓は使わない）
+    window.LineShareUI?.ask({ title: "長押ししてコピーしてね", input: url, readonly: true, ok: "閉じる", cancel: null });
   }
 });
 
@@ -129,16 +140,33 @@ function openLink(r) {
     else renderResult(lastDraw, { verified: true });
   } catch (error) {
     console.error(error);
-    renderProblem("確かめるリンクを読めませんでした。リンクが途中で切れていないか確かめてください。");
+    renderProblem("確かめるリンクを読めませんでした。リンクが途中で切れていないか、見てみてね。");
   }
 }
 
+// 確かめるリンクで開いたとき、お題を読みこむあいだは結果と同じ大きさの箱を出しておく（入力の画面を見せない）
+function showLoading() {
+  document.body.classList.add("is-result-page");
+  $("result").hidden = false;
+  $("resultBody").innerHTML = '<div class="ls-skeleton" style="height:220px" aria-label="読みこみ中"></div>';
+  $("sendButton").hidden = true;
+  $("copyButton").hidden = true;
+}
+
 async function init() {
+  const r = new URLSearchParams(location.search).get("r");
+  if (r) showLoading();
   renderModes(pickMode);
   renderForm(data);
+  // はじめての人にだけ、使い方を3つ（結果を見に来た人には出さない）
+  if (!r)
+    window.LineShareUI?.firstTip(
+      "qji",
+      ["決め方を選んで、名前などを入れます", "「🎟️ 引く！」で決まります。🙈 ヒミツで引くと、受け取った人が「ひらく」まで見えません", "💬 LINEで送ると、だれが開いても同じ結果を確かめられます"],
+      $("modes")
+    );
   await loadData();
   renderForm(data); // お題・罰ゲームの種類を出す
-  const r = new URLSearchParams(location.search).get("r");
   if (r) openLink(r);
 }
 

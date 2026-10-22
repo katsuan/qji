@@ -1,5 +1,5 @@
 // 入力の状態（名前・各モードの設定）。この端末（localStorage の qji:state）に残す
-import { isMode } from "./modes.js?v=202610221446";
+import { isMode } from "./modes.js?v=202610221616";
 
 const STORAGE_KEY = "qji:state";
 
@@ -98,20 +98,20 @@ export function currentInput(mode) {
 // 引けるかどうか（引けないときは理由）。data はお題・罰ゲームのデータ
 export function problem(mode, input, data) {
   if (mode === "lottery") {
-    if (input.names.length < 2) return "名前を2人以上入れてください。";
-    if (input.type === "win" && input.wins >= input.names.length) return "当たりの数は、人数より少なくしてください。";
-    if (input.type === "team" && input.teams > input.names.length) return "チームの数は、人数以下にしてください。";
+    if (input.names.length < 2) return "名前を2人以上入れてね。";
+    if (input.type === "win" && input.wins >= input.names.length) return "当たりの数は、人数より少なくしてね。";
+    if (input.type === "team" && input.teams > input.names.length) return "チームの数は、人数までにしてね。";
   }
   if (mode === "amida") {
-    if (input.names.length < 2) return "名前を2人以上入れてください。";
+    if (input.names.length < 2) return "名前を2人以上入れてね。";
     if (input.names.length > 12) return "あみだは12人までです。";
   }
-  if (mode === "roulette" && input.items.length < 2) return state.roulette.own ? "ルーレットの項目を2つ以上入れてください。" : "名前を2つ以上入れてください。";
+  if (mode === "roulette" && input.items.length < 2) return state.roulette.own ? "ルーレットの項目を2つ以上入れてね。" : "名前を2つ以上入れてね。";
   if (mode === "number") {
     const left = input.max - input.min + 1 - (input.exclude || []).length;
     if (input.exclude && left <= 0) return "範囲の数字はぜんぶ出ました。「出た数字をリセット」で、はじめから引けます。";
-    if (input.unique && input.count > left) return input.exclude ? `残りの数字は ${left} 個です。いくつ出すかを減らしてください。` : "重ならない数字が足りません。範囲を広げるか、数を減らしてください。";
+    if (input.unique && input.count > left) return input.exclude ? `残りの数字は ${left} 個です。いくつ出すかを減らしてね。` : "重ならない数字が足りません。範囲を広げるか、数を減らしてね。";
   }
-  if ((mode === "topic" && !data.topics) || (mode === "penalty" && !data.penalties)) return "お題を読み込み中です。少し待ってからもう一度。";
+  if ((mode === "topic" && !data.topics) || (mode === "penalty" && !data.penalties)) return "お題を読みこみ中です。少し待ってから、もう一度押してね。";
   return "";
 }

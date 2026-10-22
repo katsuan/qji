@@ -27,7 +27,7 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
 <!-- Q キット（おくるんの共通部品）。色と字は style.css の :root で、くじの色に -->
 <link rel="stylesheet" href="https://katsuan.github.io/line-share/shared/ui.css">
-<link rel="stylesheet" href="style.css?v=202610221446">
+<link rel="stylesheet" href="style.css?v=202610221616">
 </head>
 <body>
 <main class="ls-page ls-stack">
@@ -37,7 +37,6 @@
     <img class="ls-brand-logo" src="logo.svg" alt="Qji" width="40" height="28">
   </header>
   <p class="ls-brand-copy">迷ったら、くじで決めよう</p>
-  <p class="ls-hint lead tool-only">当番・順番・チーム分けを、公平に決めて送れます。</p>
 
   <!-- 決め方（モード）。押すと下の入力が切り替わる -->
   <nav id="modes" class="modes tool-only" aria-label="決め方"></nav>
@@ -46,6 +45,8 @@
 
   <!-- ヒミツで引く：引いた人にも結果を見せず、受け取った人が「ひらく」を押すまで伏せておく -->
   <label class="secret tool-only"><input id="secretToggle" type="checkbox">🙈 ヒミツで引く<small>結果を見ずに LINE で送り、みんなで「ひらく」</small></label>
+  <!-- まだ引けないときの理由（入力のすぐ下に赤い文字で） -->
+  <p id="drawError" class="ls-hint is-error tool-only" role="alert" hidden></p>
   <button id="drawButton" class="draw tool-only" type="button">🎟️ 引く！</button>
 
   <!-- 結果。確かめるリンクで開いたときは、上に「同じ条件で引き直した結果」と出す -->
@@ -77,7 +78,7 @@
 <script src="https://katsuan.github.io/line-share/shared/oqrn.js"></script>
 <!-- Q キットの動き（トーストなど） -->
 <script src="https://katsuan.github.io/line-share/shared/ui.js" defer></script>
-<script type="module" src="app.js?v=202610221446"></script>
+<script type="module" src="app.js?v=202610221616"></script>
 <script src="https://katsuan.github.io/line-share/shared/tool-share.js" data-tool="qji" defer></script>
 <!-- 電波がなくても開けるように（sw.js） -->
 <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});</script>

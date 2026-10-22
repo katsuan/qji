@@ -1,6 +1,6 @@
 // 画面：結果（ふつうの結果・ヒミツの札・まだ引けないときの理由）。あみだとルーレットの図もここ
-import { cardUrl } from "./link.js?v=202610221446";
-import { $, esc, findMode, teamName } from "./modes.js?v=202610221446";
+import { cardUrl } from "./link.js?v=202610221616";
+import { $, esc, findMode, teamName } from "./modes.js?v=202610221616";
 
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 

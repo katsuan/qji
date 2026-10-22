@@ -25,7 +25,6 @@ body {
 }
 
 .ls-page { width: min(100%, 480px); padding: 14px 16px calc(32px + env(safe-area-inset-bottom)); }
-.lead { font-size: 15px; line-height: 1.7; }
 
 /* 決め方（モード）：3列 × 2段 */
 .modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }

@@ -9,13 +9,13 @@
 //   js/state.js  入力の状態・保存・確かめ      js/draw.js    引く・結果の文
 //   js/link.js   確かめるリンク・カードの URL  js/form.js    画面：決め方と入力
 //   js/result.js 画面：結果・ヒミツの札・図    app.js        操作とはじめ（このファイル）
-import { draw } from "./js/draw.js?v=202610222216";
-import { renderForm, renderModes } from "./js/form.js?v=202610222216";
-import { readLink, verifyUrl } from "./js/link.js?v=202610222216";
-import { $ } from "./js/modes.js?v=202610222216";
-import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610222216";
-import { newSeed } from "./js/rng.js?v=202610222216";
-import { clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610222216";
+import { draw } from "./js/draw.js?v=202610230133";
+import { renderForm, renderModes } from "./js/form.js?v=202610230133";
+import { readLink, verifyUrl } from "./js/link.js?v=202610230133";
+import { $ } from "./js/modes.js?v=202610230133";
+import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610230133";
+import { newSeed } from "./js/rng.js?v=202610230133";
+import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610230133";
 
 const data = { topics: null, penalties: null }; // お題・罰ゲーム（data/*.json）
 let lastDraw = null; // { mode, seed, input, time, result, secret }
@@ -45,21 +45,32 @@ $("form").addEventListener("input", (event) => {
   if (el.type === "checkbox") renderForm(data);
 });
 
+// 出た数字のリセット：聞かずに消して、「元に戻す」を出す
+function resetUsed() {
+  const before = [...(getValue("number.used") || [])];
+  setValue("number.used", []);
+  renderForm(data);
+  window.LineShareUI?.toast("出た数字をリセットしました", {
+    actionLabel: "元に戻す",
+    onAction: () => {
+      setValue("number.used", before);
+      renderForm(data);
+    }
+  });
+}
+
+// −・＋のボタン：となりの数の欄を1つずつ（欄の min〜max の中で）
+function stepValue(step) {
+  const bind = step.dataset.step;
+  const input = $("form").querySelector(`[data-bind="${bind}"]`);
+  const now = Number(getValue(bind));
+  const next = clampInt(now + Number(step.dataset.delta), Number(input.min), Number(input.max), now);
+  setValue(bind, next);
+  input.value = next;
+}
+
 $("form").addEventListener("click", (event) => {
-  if (event.target.closest("[data-reset-used]")) {
-    // 消したあとに「元に戻す」を出す（聞かずに消す）
-    const before = [...(getValue("number.used") || [])];
-    setValue("number.used", []);
-    renderForm(data);
-    window.LineShareUI?.toast("出た数字をリセットしました", {
-      actionLabel: "元に戻す",
-      onAction: () => {
-        setValue("number.used", before);
-        renderForm(data);
-      }
-    });
-    return;
-  }
+  if (event.target.closest("[data-reset-used]")) return resetUsed();
   const chip = event.target.closest("[data-chip]");
   if (chip) {
     showDrawError("");
@@ -68,17 +79,13 @@ $("form").addEventListener("click", (event) => {
     return;
   }
   const step = event.target.closest("[data-step]");
-  if (step) {
-    const bind = step.dataset.step;
-    const input = $("form").querySelector(`[data-bind="${bind}"]`);
-    const next = clampInt(Number(getValue(bind)) + Number(step.dataset.delta), Number(input.min), Number(input.max), Number(getValue(bind)));
-    setValue(bind, next);
-    input.value = next;
-  }
+  if (step) stepValue(step);
 });
 
 // ---- 引く！ ----
+let drawnAt = 0; // すぐの二度押しで引き直さない（続けて引くとき、数字が2回ぶん出てしまうため）
 $("drawButton").addEventListener("click", () => {
+  if (Date.now() - drawnAt < 700) return;
   const mode = state.mode;
   const input = currentInput(mode);
   const reason = problem(mode, input, data);
@@ -87,11 +94,12 @@ $("drawButton").addEventListener("click", () => {
     $("result").hidden = true;
     return;
   }
+  drawnAt = Date.now();
   const seed = newSeed();
   lastDraw = { mode, seed, input, time: Date.now(), result: draw(mode, input, seed, data), secret: $("secretToggle").checked };
   // ビンゴのように続けて引くときは、出た数字をためておく（次に引くときに外す）
   if (mode === "number" && state.number.keep) {
-    setValue("number.used", [...(state.number.used || []), ...lastDraw.result.nums]);
+    setValue("number.used", [...(state.number.used || []), ...lastDraw.result.nums].slice(-MAX_USED));
     renderForm(data);
   }
   if (lastDraw.secret) renderSealed(lastDraw, { sender: true });

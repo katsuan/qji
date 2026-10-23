@@ -1,5 +1,5 @@
 // 入力の状態（名前・各モードの設定）。この端末（localStorage の qji:state）に残す
-import { isMode } from "./modes.js?v=202610222216";
+import { isMode } from "./modes.js?v=202610230133";
 
 const STORAGE_KEY = "qji:state";
 
@@ -14,11 +14,26 @@ const DEFAULTS = {
   penalty: { cat: "all", who: true }
 };
 
-function mergeState(saved) {
+export const MAX_USED = 2000; // 出た数字をためておく数の上限
+
+const isObj = (v) => Boolean(v) && typeof v === "object" && !Array.isArray(v);
+
+// 残した値が初期値と同じ種類のときだけ使う（数の欄は、入力のまま文字で残ることもある）
+function sameType(def, val) {
+  if (Array.isArray(def)) return Array.isArray(val) ? val.filter(Number.isInteger).slice(-MAX_USED) : def;
+  if (typeof def === "number") return (typeof val === "number" && Number.isFinite(val)) || typeof val === "string" ? val : def;
+  return typeof val === typeof def ? val : def;
+}
+
+// 端末に残した中身を、決まった形にそろえる（壊れていても開けるように）
+export function mergeState(saved) {
   const merged = structuredClone(DEFAULTS);
-  for (const key of Object.keys(DEFAULTS)) {
-    if (saved[key] == null) continue;
-    merged[key] = typeof DEFAULTS[key] === "object" ? { ...DEFAULTS[key], ...saved[key] } : saved[key];
+  if (!isObj(saved)) return merged;
+  for (const [key, def] of Object.entries(DEFAULTS)) {
+    const val = saved[key];
+    if (val == null) continue;
+    if (!isObj(def)) merged[key] = sameType(def, val);
+    else if (isObj(val)) for (const k of Object.keys(def)) if (val[k] != null) merged[key][k] = sameType(def[k], val[k]);
   }
   if (!isMode(merged.mode)) merged.mode = DEFAULTS.mode;
   return merged;
@@ -113,5 +128,10 @@ export function problem(mode, input, data) {
     if (input.unique && input.count > left) return input.exclude ? `残りの数字は ${left} 個です。いくつ出すかを減らしてね。` : "重ならない数字が足りません。範囲を広げるか、数を減らしてね。";
   }
   if ((mode === "topic" && !data.topics) || (mode === "penalty" && !data.penalties)) return "お題を読みこみ中です。少し待ってから、もう一度押してね。";
+  // 前に選んだ種類が、いまのお題・罰ゲームにないとき
+  if (mode === "topic" && input.style !== "letter" && !hasCategory(data.topics, input.cat)) return "お題の種類を選び直してね。";
+  if (mode === "penalty" && !hasCategory(data.penalties, input.cat)) return "罰ゲームの種類を選び直してね。";
   return "";
 }
+
+const hasCategory = (json, cat) => cat === "all" || ((json && json.categories) || []).some((c) => c.key === cat);

@@ -1,8 +1,8 @@
 // 確かめるリンク（?r=<base64url(JSON)>）と、おくるんで送るカードの URL
 // d（引いた結果）は { mode, seed, input, time, result, secret }
-import { draw, summary } from "./draw.js?v=202610222216";
-import { findMode, isMode } from "./modes.js?v=202610222216";
-import { clampInt, problem } from "./state.js?v=202610222216";
+import { draw, summary } from "./draw.js?v=202610230133";
+import { findMode, isMode } from "./modes.js?v=202610230133";
+import { clampInt, problem } from "./state.js?v=202610230133";
 
 const PAGE_URL = "https://katsuan.github.io/qji/";
 const CARD_COLOR = "#E23E4A"; // ロゴのコーラルの赤
@@ -118,5 +118,6 @@ export function cardUrl(d) {
     });
   }
   badges(d, mode).forEach((badge) => params.append("badge", badge));
-  return window.OQRN.cardUrl(params);
+  // おくるんの部品が読めない（電波なしなど）ときは、送るボタンだけ使えない
+  return window.OQRN ? window.OQRN.cardUrl(params) : "#";
 }

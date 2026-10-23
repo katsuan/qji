@@ -5,8 +5,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { encode, decode, readLink, cleanInput } from "../js/link.js";
 import { draw } from "../js/draw.js";
+import { mergeState, problem } from "../js/state.js";
+import { cardUrl } from "../js/link.js";
 
-const XSS = "<img src=x onerror=alert(1)>";
+const XSS = "<img src=x onerror=alert(1)>"; // qcheck-ok: W8 外からの文字の見本
 const json = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), "utf8"));
 const data = { topics: json("topics.json"), penalties: json("penalties.json") };
 const link = (obj) => encode(obj);
@@ -67,4 +69,35 @@ test("お題の種類が知らないものなら読まない。時刻がおか�
   const d = readLink(link({ m: "penalty", s: 9, i: { cat: "mild", names: ["a"] }, h: 1 }), data);
   assert.equal(d.secret, true);
   assert.equal(d.result.who, "a");
+});
+
+test("端末に残した設定が壊れていても、決まった形で開ける", () => {
+  const s = mergeState({ mode: "nope", names: 5, lottery: "xx", number: { used: "abc", min: {}, keep: "yes" }, topic: null, amida: [1, 2] });
+  assert.equal(s.mode, "lottery");
+  assert.equal(typeof s.names, "string");
+  assert.equal(s.lottery.type, "win");
+  assert.ok(Array.isArray(s.number.used));
+  assert.equal(s.number.keep, false);
+  assert.equal(s.topic.cat, "all");
+  assert.equal(s.amida.goals, "");
+  const ok = mergeState({ names: "a\nb", number: { used: [3, 5, "x", 2.5], keep: true } });
+  assert.deepEqual(ok.number.used, [3, 5]);
+  assert.equal(ok.number.keep, true);
+  assert.equal(ok.names, "a\nb");
+});
+
+test("ない種類のお題・罰ゲームは、引く前に理由を出す（引いて止まらない）", () => {
+  assert.ok(problem("topic", { cat: "nope" }, data));
+  assert.ok(problem("penalty", { cat: "nope", names: [] }, data));
+  assert.equal(problem("topic", { cat: "all" }, data), "");
+  assert.equal(problem("topic", { style: "letter" }, data), "");
+  assert.throws(() => readLink(link({ m: "topic", s: 1, i: { cat: "nope" } }), data));
+});
+
+test("おくるんの部品が読めない（電波なし）ときも、カードの URL で止まらない", () => {
+  globalThis.window = {};
+  const d = { mode: "lottery", seed: 1, input: { names: ["a", "b"], type: "win", wins: 1, teams: 2 }, time: 1, secret: false };
+  d.result = draw("lottery", d.input, 1, data);
+  assert.equal(cardUrl(d), "#");
+  delete globalThis.window;
 });

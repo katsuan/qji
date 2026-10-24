@@ -16,7 +16,6 @@
   --ls-font: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
 
   --wood: #e2ba70;
-  --line-green: #06c755;
 }
 
 body {
@@ -211,7 +210,8 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .result-page-only, .ls-button.result-page-only { display: none; }
 .is-result-page .result-page-only, .is-result-page .ls-button.result-page-only { display: flex; }
 .actions { display: grid; gap: 8px; }
-.ls-button.line { gap: 4px; border-color: var(--line-green); background: var(--line-green); color: #fff; font-size: 16px; font-weight: 800; }
+/* 送るボタン：色は Q キットの ls-button line（LINE の緑）。ここでは大きさだけ */
+.ls-button.line { gap: 4px; font-size: 16px; font-weight: 800; }
 .ls-button small { font-size: 12px; font-weight: 700; }
 .status { min-height: 1em; margin: 0; color: var(--ls-subtext); font-size: 13px; text-align: center; }
 

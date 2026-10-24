@@ -9,13 +9,13 @@
 //   js/state.js  入力の状態・保存・確かめ      js/draw.js    引く・結果の文
 //   js/link.js   確かめるリンク・カードの URL  js/form.js    画面：決め方と入力
 //   js/result.js 画面：結果・ヒミツの札・図    app.js        操作とはじめ（このファイル）
-import { draw } from "./js/draw.js?v=202610230133";
-import { renderForm, renderModes } from "./js/form.js?v=202610230133";
-import { readLink, verifyUrl } from "./js/link.js?v=202610230133";
-import { $ } from "./js/modes.js?v=202610230133";
-import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610230133";
-import { newSeed } from "./js/rng.js?v=202610230133";
-import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610230133";
+import { draw } from "./js/draw.js?v=202610241328";
+import { renderForm, renderModes } from "./js/form.js?v=202610241328";
+import { readLink, verifyUrl } from "./js/link.js?v=202610241328";
+import { $ } from "./js/modes.js?v=202610241328";
+import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610241328";
+import { newSeed } from "./js/rng.js?v=202610241328";
+import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/state.js?v=202610241328";
 
 const data = { topics: null, penalties: null }; // お題・罰ゲーム（data/*.json）
 let lastDraw = null; // { mode, seed, input, time, result, secret }
@@ -116,7 +116,7 @@ $("copyButton").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(url);
     // 知らせは Q キットのトースト（読めないときは下の文字）
-    if (window.LineShareUI?.toast) window.LineShareUI.toast("確かめるリンクをコピーしました");
+    if (window.LineShareUI?.toast) window.LineShareUI.toast(window.QSeason ? QSeason.decorate("確かめるリンクをコピーしました") : "確かめるリンクをコピーしました"); // 季節の絵文字をときどき
     else $("status").textContent = "確かめるリンクをコピーしました。";
   } catch {
     // コピーできないとき：長押しで選べる文字で出す（ブラウザの小窓は使わない）

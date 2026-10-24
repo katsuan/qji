@@ -1,5 +1,5 @@
 // 入力の状態（名前・各モードの設定）。この端末（localStorage の qji:state）に残す
-import { isMode } from "./modes.js?v=202610241435";
+import { isMode } from "./modes.js?v=202610241439";
 
 const STORAGE_KEY = "qji:state";
 

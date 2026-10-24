@@ -27,7 +27,7 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
 <!-- Q キット（おくるんの共通部品）。色と字は style.css の :root で、くじの色に -->
 <link rel="stylesheet" href="https://katsuan.github.io/line-share/shared/ui.css">
-<link rel="stylesheet" href="style.css?v=202610241328">
+<link rel="stylesheet" href="style.css?v=202610241428">
 </head>
 <body>
 <main class="ls-page ls-stack">
@@ -44,7 +44,7 @@
   <section id="form" class="ls-panel tool-only" aria-live="polite"></section>
 
   <!-- ヒミツで引く：引いた人にも結果を見せず、受け取った人が「ひらく」を押すまで伏せておく -->
-  <label class="secret tool-only"><input id="secretToggle" type="checkbox">🙈 ヒミツで引く<small>結果を見ずに LINE で送り、みんなで「ひらく」</small></label>
+  <label class="secret tool-only"><input id="secretToggle" type="checkbox">🙈 ヒミツで引く<small>結果を見ずにカードで送り、みんなで「ひらく」</small></label>
   <!-- まだ引けないときの理由（入力のすぐ下に赤い文字で） -->
   <p id="drawError" class="ls-hint is-error tool-only" role="alert" hidden></p>
   <button id="drawButton" class="draw tool-only" type="button">🎟️ 引く！</button>
@@ -55,7 +55,7 @@
     <div id="resultBody"></div>
     <p id="seedNote" class="seed-note"></p>
     <div class="actions">
-      <a id="sendButton" class="ls-button is-block line" href="#">💬 LINEで送る<small>（おくるん）</small></a>
+      <a id="sendButton" class="ls-button is-block line" href="#">💬 カードで送る<small>（おくるん）</small></a>
       <button id="copyButton" class="ls-button is-block" type="button">🔗 確かめるリンクをコピー</button>
       <a class="ls-button is-block result-page-only" href="./">🎟️ 新しくくじを引く</a>
     </div>
@@ -78,7 +78,7 @@
 <script src="https://katsuan.github.io/line-share/shared/oqrn.js"></script>
 <!-- Q キットの動き（トーストなど） -->
 <script src="https://katsuan.github.io/line-share/shared/ui.js" defer></script>
-<script type="module" src="app.js?v=202610241328"></script>
+<script type="module" src="app.js?v=202610241428"></script>
 <script src="https://katsuan.github.io/line-share/shared/tool-share.js" data-tool="qji" defer></script>
 <!-- 電波がなくても開けるように（sw.js） -->
 <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});</script>

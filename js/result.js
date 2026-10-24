@@ -1,6 +1,6 @@
 // 画面：結果（ふつうの結果・ヒミツの札・まだ引けないときの理由）。あみだとルーレットの図もここ
-import { cardUrl } from "./link.js?v=202610241328";
-import { $, esc, findMode, teamName } from "./modes.js?v=202610241328";
+import { cardUrl } from "./link.js?v=202610241428";
+import { $, esc, findMode, teamName } from "./modes.js?v=202610241428";
 
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -62,7 +62,7 @@ export function renderSealed(d, { sender = false } = {}) {
     `<p class="result-title">${mode.icon} ${mode.label}</p>` +
     `<div class="sealed"><span class="sealed-mark" aria-hidden="true">🔒</span><p class="sealed-text">結果はヒミツ</p>` +
     (sender
-      ? `<p class="ls-hint">あなたにも見えていません。LINE で送って、みんなで「ひらく」を押してね。</p>`
+      ? `<p class="ls-hint">あなたにも見えていません。カードで送って、みんなで「ひらく」を押してね。</p>`
       : `<p class="ls-hint">せーので、ひらいてね</p><button id="openSealed" class="ls-button open-sealed" type="button">🎁 ひらく</button>`) +
     `</div>`;
   $("verifyNote").hidden = true;

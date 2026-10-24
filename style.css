@@ -212,7 +212,6 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .actions { display: grid; gap: 8px; }
 /* 送るボタン：色は Q キットの ls-button line（LINE の緑）。ここでは大きさだけ */
 .ls-button.line { gap: 4px; font-size: 16px; font-weight: 800; }
-.ls-button small { font-size: 12px; font-weight: 700; }
 .status { min-height: 1em; margin: 0; color: var(--ls-subtext); font-size: 13px; text-align: center; }
 
 .about p { margin: 0; color: var(--ls-subtext); font-size: 14px; line-height: 1.8; }

@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { encode, decode, readLink, cleanInput } from "../js/link.js";
 import { draw } from "../js/draw.js";
-import { mergeState, problem } from "../js/state.js";
+import { mergeState, problem } from "../js/store.js";
 import { cardUrl } from "../js/link.js";
 
 const XSS = "<img src=x onerror=alert(1)>"; // qcheck-ok: W8 外からの文字の見本

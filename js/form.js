@@ -1,6 +1,6 @@
 // 画面：決め方のボタンと、モードごとの入力
-import { $, MODES, esc } from "./modes.js?v=202610241455";
-import { state } from "./state.js?v=202610241455";
+import { $, MODES, esc } from "./modes.js?v=202610250222";
+import { state } from "./store.js?v=202610250222";
 
 // onPick(key)：決め方のボタンを押したとき
 export function renderModes(onPick) {

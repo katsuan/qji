@@ -1,9 +1,12 @@
 // 画面：結果（ふつうの結果・ヒミツの札・まだ引けないときの理由）。あみだとルーレットの図もここ
-import { cardUrl } from "./link.js?v=202610250222";
-import { $, esc, findMode, teamName } from "./modes.js?v=202610250222";
+// 読まれるところ：app.js（import）
+import { cardUrl } from "./link.js?v=202610250232";
+import { $, esc, findMode, teamName } from "./modes.js?v=202610250232";
 
+// 動きを減らす設定の端末か
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// 結果の欄を出して、見えるところまで送る
 function showResultCard() {
   $("status").textContent = "";
   $("result").hidden = false;
@@ -11,6 +14,7 @@ function showResultCard() {
   requestAnimationFrame(() => $("result").scrollIntoView({ behavior: "smooth", block: "start" }));
 }
 
+// 送る・コピーのボタンを出すか、コピーのボタンの文字
 function setActions({ send, copyLabel }) {
   $("sendButton").hidden = !send;
   $("copyButton").hidden = !send;
@@ -85,11 +89,15 @@ export function renderProblem(reason) {
 // ---- あみだの図（SVG）。線は上から順に色付きでなぞる ----
 const PATH_COLORS = ["#e23e4a", "#2f8fe0", "#22a86a", "#f5a524", "#8b5cf6", "#ec4899", "#14b8a6", "#f97316", "#6366f1", "#84cc16", "#06b6d4", "#a855f7"];
 
+// あみだの図（SVG の文字）を作る
 function amidaSvg(r) {
   const n = r.names.length;
   const W = 320, top = 34, bottom = 34, gapX = W / n, H = top + bottom + r.levels * 22;
+  // 縦の線 col の x 座標
   const x = (col) => gapX * (col + 0.5);
+  // 段 level の y 座標（上と下のはしも）
   const y = (level) => (level < 0 ? top : level >= r.levels ? H - bottom : top + (level + 0.5) * 22);
+  // 名前・ゴールの文字（6文字まで）
   const label = (text, cx, cy) => `<text x="${cx}" y="${cy}" text-anchor="middle" font-size="${n > 8 ? 10 : 12}" fill="#3a2a2b">${esc(String(text).slice(0, 6))}</text>`;
   let svg = `<svg class="amida" viewBox="0 0 ${W} ${H}" role="img" aria-label="あみだくじ">`;
   for (let c = 0; c < n; c += 1) svg += `<line class="rail" x1="${x(c)}" y1="${top}" x2="${x(c)}" y2="${H - bottom}"/>`;
@@ -103,6 +111,7 @@ function amidaSvg(r) {
   return svg + "</svg>";
 }
 
+// あみだの線を、上から順になぞって見せる
 function animateAmida() {
   if (reduced()) return;
   [...document.querySelectorAll("[data-amida-path]")].forEach((p, i) => {
@@ -117,12 +126,14 @@ function animateAmida() {
 // ---- ルーレットの図（SVG）。止まる位置は結果（index）から決める ----
 const WHEEL_COLORS = ["#ff8a7a", "#ffd166", "#7fd1ae", "#7cb8f2", "#c4a3f7", "#f9a8d4", "#a3e635", "#fdba74"];
 
+// ルーレットの円（SVG の文字）を作る
 function wheelSvg(r) {
   const n = r.items.length;
   const R = 150, c = 160;
   let svg = `<div class="wheel-box"><span class="wheel-pointer" aria-hidden="true">▼</span><svg class="wheel" viewBox="0 0 320 320" role="img" aria-label="ルーレット"><g class="wheel-spin" id="wheelSpin">`;
   for (let i = 0; i < n; i += 1) {
     const a0 = (i / n) * 2 * Math.PI - Math.PI / 2, a1 = ((i + 1) / n) * 2 * Math.PI - Math.PI / 2;
+    // 角度 a の円周上の点
     const p = (a) => `${c + R * Math.cos(a)} ${c + R * Math.sin(a)}`;
     const large = a1 - a0 > Math.PI ? 1 : 0;
     svg += `<path d="M${c} ${c}L${p(a0)}A${R} ${R} 0 ${large} 1 ${p(a1)}Z" fill="${WHEEL_COLORS[i % WHEEL_COLORS.length]}" stroke="#fff" stroke-width="3"/>`;
@@ -132,10 +143,12 @@ function wheelSvg(r) {
   return svg + `</g><circle cx="${c}" cy="${c}" r="18" fill="#fff" stroke="#e23e4a" stroke-width="4"/></svg></div>`;
 }
 
+// ルーレットを回して、選ばれた項目で止める（止まったら名前を出す）
 function spinWheel(r) {
   const g = $("wheelSpin");
   const seg = 360 / r.items.length;
   const target = 360 * 6 - (r.index + 0.5) * seg; // 選ばれた項目の真ん中が、上の ▼ に来る
+  // 当たった項目の名前を出す
   const show = () => ($("rouletteWinner").hidden = false);
   if (reduced()) {
     g.style.transform = `rotate(${target}deg)`;

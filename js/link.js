@@ -1,12 +1,14 @@
 // 確かめるリンク（?r=<base64url(JSON)>）と、おくるんで送るカードの URL
 // d（引いた結果）は { mode, seed, input, time, result, secret }
-import { draw, summary } from "./draw.js?v=202610250222";
-import { findMode, isMode } from "./modes.js?v=202610250222";
-import { clampInt, problem } from "./store.js?v=202610250222";
+// 読まれるところ：app.js・js/result.js（import）
+import { draw, summary } from "./draw.js?v=202610250232";
+import { findMode, isMode } from "./modes.js?v=202610250232";
+import { clampInt, problem } from "./store.js?v=202610250232";
 
 const PAGE_URL = "https://katsuan.github.io/qji/";
 const CARD_COLOR = "#E23E4A"; // ロゴのコーラルの赤
 
+// 中身（オブジェクト）を JSON → UTF-8 → base64url の文字にする
 export function encode(obj) {
   const bytes = new TextEncoder().encode(JSON.stringify(obj));
   let bin = "";
@@ -14,6 +16,7 @@ export function encode(obj) {
   return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
+// encode の逆。base64url の文字から中身に戻す（読めないときは投げる）
 export function decode(text) {
   const b64 = text.replace(/-/g, "+").replace(/_/g, "/");
   const bin = atob(b64 + "===".slice((b64.length + 3) % 4));
@@ -26,15 +29,19 @@ const MAX_TEXT = 200; // 名前・項目 1つの長さ
 const MAX_ITEMS = 40; // 名前・項目の数（入力の lines() と同じ）
 const KEY_RE = /^[a-z0-9_-]{1,20}$/i;
 
+// 名前・項目の配列を、文字だけ・長さと数の上限つきにそろえる
 const texts = (v) =>
   (Array.isArray(v) ? v : [])
     .filter((s) => typeof s === "string" || typeof s === "number")
     .map((s) => String(s).slice(0, MAX_TEXT))
     .filter((s) => s.trim())
     .slice(0, MAX_ITEMS);
+// list の中の値ならそのまま、ちがえば fallback
 const oneOf = (v, list, fallback) => (list.includes(v) ? v : fallback);
+// お題・罰ゲームの種類の名前（形がちがえば "all"）
 const key = (v) => (typeof v === "string" && KEY_RE.test(v) ? v : "all");
 
+// リンクで受けとった入力を、引くときと同じ形・範囲にそろえる
 export function cleanInput(mode, i) {
   const v = i && typeof i === "object" && !Array.isArray(i) ? i : {};
   switch (mode) {

@@ -1,5 +1,6 @@
 // 入力の状態（名前・各モードの設定）。この端末（localStorage の qji:state）に残す
-import { isMode } from "./modes.js?v=202610250222";
+// 読まれるところ：app.js・js/link.js・js/form.js（import）
+import { isMode } from "./modes.js?v=202610250232";
 
 const STORAGE_KEY = "qji:state";
 
@@ -16,6 +17,7 @@ const DEFAULTS = {
 
 export const MAX_USED = 2000; // 出た数字をためておく数の上限
 
+// ふつうのオブジェクト（配列でない）か
 const isObj = (v) => Boolean(v) && typeof v === "object" && !Array.isArray(v);
 
 // 残した値が初期値と同じ種類のときだけ使う（数の欄は、入力のまま文字で残ることもある）
@@ -39,6 +41,7 @@ export function mergeState(saved) {
   return merged;
 }
 
+// 端末に残した状態を読む（壊れていれば初期値）
 function loadState() {
   try {
     return mergeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"));
@@ -49,6 +52,7 @@ function loadState() {
 
 export const state = loadState();
 
+// いまの状態を端末に残す
 export function saveState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -65,6 +69,7 @@ export function setValue(bind, value) {
   saveState();
 }
 
+// "lottery.wins" のような書き方で値を読む
 export function getValue(bind) {
   const [a, b] = bind.split(".");
   return b ? state[a][b] : state[a];
@@ -78,6 +83,7 @@ export const lines = (text) =>
     .filter(Boolean)
     .slice(0, 40);
 
+// 整数にして min〜max に入れる（数でなければ fallback）
 export const clampInt = (v, min, max, fallback) => {
   const n = parseInt(v, 10);
   return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
@@ -134,4 +140,5 @@ export function problem(mode, input, data) {
   return "";
 }
 
+// その種類のお題・罰ゲームがあるか（"all" はいつもある）
 const hasCategory = (json, cat) => cat === "all" || ((json && json.categories) || []).some((c) => c.key === cat);

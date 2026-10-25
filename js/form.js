@@ -1,6 +1,7 @@
 // 画面：決め方のボタンと、モードごとの入力
-import { $, MODES, esc } from "./modes.js?v=202610250222";
-import { state } from "./store.js?v=202610250222";
+// 読まれるところ：app.js（import）
+import { $, MODES, esc } from "./modes.js?v=202610250232";
+import { state } from "./store.js?v=202610250232";
 
 // onPick(key)：決め方のボタンを押したとき
 export function renderModes(onPick) {
@@ -16,24 +17,28 @@ export function renderModes(onPick) {
   });
 }
 
+// 名前の入力欄（1行に1人）の HTML
 function namesField(label = "名前（1行に1人）", hint = "前に入れた名前は、この端末に残ります。") {
   return `<label class="ls-field"><span class="ls-label">${label}</span>
     <textarea class="ls-input" data-bind="names" placeholder="たろう&#10;はなこ&#10;じろう">${esc(state.names)}</textarea>
     <p class="ls-hint">${hint}</p></label>`;
 }
 
+// 選ぶチップの並び（bind の値を options から1つ）の HTML
 function chips(bind, options, current) {
   return `<div class="ls-chips">${options
     .map(([value, label]) => `<button type="button" class="ls-chip${value === current ? " is-active" : ""}" aria-pressed="${value === current}" data-chip="${bind}" data-value="${value}">${label}</button>`)
     .join("")}</div>`;
 }
 
+// −・＋つきの数の入力欄の HTML
 function stepper(bind, value, min, max) {
   return `<div class="stepper"><button type="button" data-step="${bind}" data-delta="-1" aria-label="減らす">−</button>
     <input class="ls-input" type="number" inputmode="numeric" data-bind="${bind}" value="${esc(value)}" min="${min}" max="${max}">
     <button type="button" data-step="${bind}" data-delta="1" aria-label="増やす">＋</button></div>`;
 }
 
+// お題・罰ゲームの種類のチップ（「ぜんぶ」と、データの種類）の HTML
 function categoryChips(bind, json, current) {
   const cats = (json && json.categories) || [];
   return chips(bind, [["all", "ぜんぶ"], ...cats.map((c) => [c.key, c.label])], current);
@@ -41,6 +46,7 @@ function categoryChips(bind, json, current) {
 
 // モードごとの入力の HTML（data はお題・罰ゲームのデータ。種類のボタンに使う）
 const FORMS = {
+  // くじびき：名前・決めること・当たりやチームの数
   lottery() {
     const t = state.lottery.type;
     return (
@@ -50,6 +56,7 @@ const FORMS = {
       (t === "team" ? `<div class="ls-field"><span class="ls-label">チームの数</span>${stepper("lottery.teams", state.lottery.teams, 2, 10)}</div>` : "")
     );
   },
+  // あみだ：名前とゴール
   amida() {
     return (
       namesField("名前（上に並ぶ人。12人まで）") +
@@ -58,6 +65,7 @@ const FORMS = {
         <p class="ls-hint">足りない分は「はずれ」になります（入れないときは、1つだけ「あたり」）。</p></label>`
     );
   },
+  // ルーレット：名前か、自分で入れる項目
   roulette() {
     return (
       `<label class="check"><input type="checkbox" data-bind="roulette.own" ${state.roulette.own ? "checked" : ""}>名前ではなく、自分で項目を入れる</label>` +
@@ -67,6 +75,7 @@ const FORMS = {
         : namesField("名前（ルーレットに並ぶ人）"))
     );
   },
+  // 数字：範囲・いくつ出すか・続けて引くときの出た数字
   number() {
     const n = state.number;
     const used = n.used || [];
@@ -83,6 +92,7 @@ const FORMS = {
         : "")
     );
   },
+  // お題：ふつうのお題か「1文字＋お題」と、その種類
   topic(data) {
     const letter = state.topic.style === "letter";
     return (
@@ -93,6 +103,7 @@ const FORMS = {
       <p class="ls-hint">会話が止まったとき、自己紹介、飲み会の話のきっかけに。</p>`)
     );
   },
+  // 罰ゲーム：種類と、だれがやるかを決めるか
   penalty(data) {
     return (
       `<div class="ls-field"><span class="ls-label">罰ゲームの種類</span>${categoryChips("penalty.cat", data.penalties, state.penalty.cat)}</div>` +
@@ -103,6 +114,7 @@ const FORMS = {
   }
 };
 
+// いまの決め方の入力欄を描く
 export function renderForm(data) {
   $("form").innerHTML = (FORMS[state.mode] || (() => ""))(data);
 }

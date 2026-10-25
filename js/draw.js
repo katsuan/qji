@@ -1,6 +1,7 @@
 // 引く：タネと入力（とお題のデータ）だけから結果を決める。画面には触らない
-import { teamName } from "./modes.js?v=202610250222";
-import { mulberry32, shuffle } from "./rng.js?v=202610250222";
+// 読まれるところ：app.js・js/link.js（import）
+import { teamName } from "./modes.js?v=202610250232";
+import { mulberry32, shuffle } from "./rng.js?v=202610250232";
 
 // お題・罰ゲームの候補（cat が "all" ならぜんぶの種類から）
 function pool(json, cat) {
@@ -49,6 +50,7 @@ export function draw(mode, input, seed, data) {
   }
 }
 
+// 数字を引く（前に出た数字・重ならない設定を守る）。数字の配列を返す
 function drawNumbers(input, rand) {
   const range = input.max - input.min + 1;
   if (input.exclude && input.exclude.length) {

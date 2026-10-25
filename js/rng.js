@@ -1,4 +1,5 @@
 // 乱数：タネ（32bit の数）から決まる乱数（mulberry32）。同じタネなら、だれが引いても同じ並びになる
+// 読まれるところ：app.js・js/draw.js（import）
 
 export function mulberry32(seed) {
   let a = seed >>> 0;

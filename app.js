@@ -9,17 +9,19 @@
 //   js/store.js  入力の状態・保存・確かめ      js/draw.js    引く・結果の文
 //   js/link.js   確かめるリンク・カードの URL  js/form.js    画面：決め方と入力
 //   js/result.js 画面：結果・ヒミツの札・図    app.js        操作とはじめ（このファイル）
-import { draw } from "./js/draw.js?v=202610250222";
-import { renderForm, renderModes } from "./js/form.js?v=202610250222";
-import { readLink, verifyUrl } from "./js/link.js?v=202610250222";
-import { $ } from "./js/modes.js?v=202610250222";
-import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610250222";
-import { newSeed } from "./js/rng.js?v=202610250222";
-import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/store.js?v=202610250222";
+// 読まれるところ：index.html（type="module"）。ほかの部品はここから import する
+import { draw } from "./js/draw.js?v=202610250232";
+import { renderForm, renderModes } from "./js/form.js?v=202610250232";
+import { readLink, verifyUrl } from "./js/link.js?v=202610250232";
+import { $ } from "./js/modes.js?v=202610250232";
+import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610250232";
+import { newSeed } from "./js/rng.js?v=202610250232";
+import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/store.js?v=202610250232";
 
 const data = { topics: null, penalties: null }; // お題・罰ゲーム（data/*.json）
 let lastDraw = null; // { mode, seed, input, time, result, secret }
 
+// 決め方を切りかえる（入力をそのモードのものにし、前の結果を消す）
 function pickMode(key) {
   state.mode = key;
   showDrawError("");
@@ -126,6 +128,7 @@ $("copyButton").addEventListener("click", async () => {
 
 // ---- はじめに ----
 async function loadData() {
+  // data/ の JSON を読む（読めないときは null）
   const get = (path) => fetch(path, { cache: "no-cache" }).then((res) => (res.ok ? res.json() : null)).catch(() => null);
   [data.topics, data.penalties] = await Promise.all([get("data/topics.json"), get("data/penalties.json")]);
 }
@@ -156,6 +159,7 @@ function showLoading() {
   $("copyButton").hidden = true;
 }
 
+// はじめに一度だけ：画面を描き、お題を読み、確かめるリンク（?r=）で開いたら結果を出す
 async function init() {
   const r = new URLSearchParams(location.search).get("r");
   if (r) {

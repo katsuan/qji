@@ -10,13 +10,13 @@
 //   js/link.js   確かめるリンク・カードの URL  js/form.js    画面：決め方と入力
 //   js/result.js 画面：結果・ヒミツの札・図    app.js        操作とはじめ（このファイル）
 // 読まれるところ：index.html（type="module"）。ほかの部品はここから import する
-import { draw } from "./js/draw.js?v=202610250232";
-import { renderForm, renderModes } from "./js/form.js?v=202610250232";
-import { readLink, verifyUrl } from "./js/link.js?v=202610250232";
-import { $ } from "./js/modes.js?v=202610250232";
-import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610250232";
-import { newSeed } from "./js/rng.js?v=202610250232";
-import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/store.js?v=202610250232";
+import { draw } from "./js/draw.js?v=202610271257";
+import { renderForm, renderModes } from "./js/form.js?v=202610271257";
+import { readLink, verifyUrl } from "./js/link.js?v=202610271257";
+import { $ } from "./js/modes.js?v=202610271257";
+import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610271257";
+import { newSeed } from "./js/rng.js?v=202610271257";
+import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/store.js?v=202610271257";
 
 const data = { topics: null, penalties: null }; // お題・罰ゲーム（data/*.json）
 let lastDraw = null; // { mode, seed, input, time, result, secret }

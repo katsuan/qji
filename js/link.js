@@ -1,9 +1,9 @@
 // 確かめるリンク（?r=<base64url(JSON)>）と、おくるんで送るカードの URL
 // d（引いた結果）は { mode, seed, input, time, result, secret }
 // 読まれるところ：app.js・js/result.js（import）
-import { draw, summary } from "./draw.js?v=202610250232";
-import { findMode, isMode } from "./modes.js?v=202610250232";
-import { clampInt, problem } from "./store.js?v=202610250232";
+import { draw, summary } from "./draw.js?v=202610271257";
+import { findMode, isMode } from "./modes.js?v=202610271257";
+import { clampInt, problem } from "./store.js?v=202610271257";
 
 const PAGE_URL = "https://katsuan.github.io/qji/";
 const CARD_COLOR = "#E23E4A"; // ロゴのコーラルの赤

@@ -1,7 +1,7 @@
 // 画面：結果（ふつうの結果・ヒミツの札・まだ引けないときの理由）。あみだとルーレットの図もここ
 // 読まれるところ：app.js（import）
-import { cardUrl } from "./link.js?v=202610250232";
-import { $, esc, findMode, teamName } from "./modes.js?v=202610250232";
+import { cardUrl } from "./link.js?v=202610271257";
+import { $, esc, findMode, teamName } from "./modes.js?v=202610271257";
 
 // 動きを減らす設定の端末か
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -48,7 +48,9 @@ export function renderResult(d, { verified = false } = {}) {
   setActions({ send: true, copyLabel: "🔗 確かめるリンクをコピー" });
   // qcheck-ok: W1 mode は決まった一覧（MODES）のもの。中身は BODIES の中で esc している
   $("resultBody").innerHTML = `<p class="result-title">${mode.icon} ${mode.label}の結果</p>` + (BODIES[r.kind] || (() => ""))(r);
-  $("verifyNote").hidden = true;
+  // 確かめるリンクで開いたとき：同じタネ・同じ条件で、いま引き直した結果だと上に出す（引いた人の結果と同じになる）
+  $("verifyNote").textContent = "✅ 同じタネ・同じ条件で引き直した結果";
+  $("verifyNote").hidden = !verified;
   const when = verified && d.time ? new Date(d.time).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
   $("seedNote").innerHTML =
     `タネ：${esc((d.seed >>> 0).toString(16)).padStart(8, "0")}${when ? `（${esc(when)} に引いた結果）` : ""}` +

@@ -1,7 +1,7 @@
 // 引く：タネと入力（とお題のデータ）だけから結果を決める。画面には触らない
 // 読まれるところ：app.js・js/link.js（import）
-import { teamName } from "./modes.js?v=202610291712";
-import { mulberry32, shuffle } from "./rng.js?v=202610291712";
+import { teamName } from "./modes.js?v=202610291806";
+import { mulberry32, shuffle } from "./rng.js?v=202610291806";
 
 // お題・罰ゲームの候補（cat が "all" ならぜんぶの種類から）
 function pool(json, cat) {

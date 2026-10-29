@@ -1,7 +1,7 @@
 // 画面：結果（ふつうの結果・ヒミツの札・まだ引けないときの理由）。あみだとルーレットの図もここ
 // 読まれるところ：app.js（import）
-import { cardUrl } from "./link.js?v=202610291712";
-import { $, esc, findMode, teamName } from "./modes.js?v=202610291712";
+import { cardUrl } from "./link.js?v=202610291806";
+import { $, esc, findMode, teamName } from "./modes.js?v=202610291806";
 
 // 動きを減らす設定の端末か
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;

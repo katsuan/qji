@@ -1,7 +1,7 @@
 // 画面：決め方のボタンと、モードごとの入力
 // 読まれるところ：app.js（import）
-import { $, MODES, esc } from "./modes.js?v=202610291712";
-import { state } from "./store.js?v=202610291712";
+import { $, MODES, esc } from "./modes.js?v=202610291806";
+import { state } from "./store.js?v=202610291806";
 
 // onPick(key)：決め方のボタンを押したとき
 export function renderModes(onPick) {
@@ -31,11 +31,11 @@ function chips(bind, options, current) {
     .join("")}</div>`;
 }
 
-// −・＋つきの数の入力欄の HTML
-function stepper(bind, value, min, max) {
-  return `<div class="stepper"><button type="button" data-step="${bind}" data-delta="-1" aria-label="減らす">−</button>
-    <input class="ls-input" type="number" inputmode="numeric" data-bind="${bind}" value="${esc(value)}" min="${min}" max="${max}">
-    <button type="button" data-step="${bind}" data-delta="1" aria-label="増やす">＋</button></div>`;
+// −・＋つきの数の入力欄の HTML（label は読み上げの名前）
+function stepper(bind, value, min, max, label) {
+  return `<div class="stepper"><button type="button" data-step="${bind}" data-delta="-1" aria-label="${label}を減らす">−</button>
+    <input class="ls-input" type="number" inputmode="numeric" data-bind="${bind}" value="${esc(value)}" min="${min}" max="${max}" aria-label="${label}">
+    <button type="button" data-step="${bind}" data-delta="1" aria-label="${label}を増やす">＋</button></div>`;
 }
 
 // お題・罰ゲームの種類のチップ（「ぜんぶ」と、データの種類）の HTML
@@ -52,8 +52,8 @@ const FORMS = {
     return (
       namesField() +
       `<div class="ls-field"><span class="ls-label">決めること</span>${chips("lottery.type", [["win", "当たりを決める"], ["order", "順番を決める"], ["team", "チームに分ける"]], t)}</div>` +
-      (t === "win" ? `<div class="ls-field"><span class="ls-label">当たりの数</span>${stepper("lottery.wins", state.lottery.wins, 1, 39)}</div>` : "") +
-      (t === "team" ? `<div class="ls-field"><span class="ls-label">チームの数</span>${stepper("lottery.teams", state.lottery.teams, 2, 10)}</div>` : "")
+      (t === "win" ? `<div class="ls-field"><span class="ls-label">当たりの数</span>${stepper("lottery.wins", state.lottery.wins, 1, 39, "当たりの数")}</div>` : "") +
+      (t === "team" ? `<div class="ls-field"><span class="ls-label">チームの数</span>${stepper("lottery.teams", state.lottery.teams, 2, 10, "チームの数")}</div>` : "")
     );
   },
   // あみだ：名前とゴール
@@ -82,7 +82,7 @@ const FORMS = {
     return (
       `<div class="row"><label class="ls-field"><span class="ls-label">いくつから</span><input class="ls-input" type="number" inputmode="numeric" data-bind="number.min" value="${esc(n.min)}"></label>
         <label class="ls-field"><span class="ls-label">いくつまで</span><input class="ls-input" type="number" inputmode="numeric" data-bind="number.max" value="${esc(n.max)}"></label></div>` +
-      `<div class="ls-field"><span class="ls-label">いくつ出す</span>${stepper("number.count", n.count, 1, 20)}</div>` +
+      `<div class="ls-field"><span class="ls-label">いくつ出す</span>${stepper("number.count", n.count, 1, 20, "いくつ出すか")}</div>` +
       `<label class="check"><input type="checkbox" data-bind="number.unique" ${n.unique || n.keep ? "checked" : ""} ${n.keep ? "disabled" : ""}>1回の中で同じ数字は出さない</label>` +
       `<label class="check"><input type="checkbox" data-bind="number.keep" ${n.keep ? "checked" : ""}>前に出た数字も出さない（ビンゴのように続けて引く）</label>` +
       (n.keep

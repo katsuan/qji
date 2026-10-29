@@ -118,7 +118,6 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   text-align: center;
   word-break: break-word;
 }
-.big.is-shuffling { color: var(--ls-subtext); }
 .list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .list li {
   display: flex;

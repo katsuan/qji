@@ -10,13 +10,13 @@
 //   js/link.js   確かめるリンク・カードの URL  js/form.js    画面：決め方と入力
 //   js/result.js 画面：結果・ヒミツの札・図    app.js        操作とはじめ（このファイル）
 // 読まれるところ：index.html（type="module"）。ほかの部品はここから import する
-import { draw } from "./js/draw.js?v=202610291806";
-import { renderForm, renderModes } from "./js/form.js?v=202610291806";
-import { readLink, verifyUrl } from "./js/link.js?v=202610291806";
-import { $ } from "./js/modes.js?v=202610291806";
-import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202610291806";
-import { newSeed } from "./js/rng.js?v=202610291806";
-import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/store.js?v=202610291806";
+import { draw } from "./js/draw.js?v=202611012034";
+import { renderForm, renderModes } from "./js/form.js?v=202611012034";
+import { readLink, verifyUrl } from "./js/link.js?v=202611012034";
+import { $ } from "./js/modes.js?v=202611012034";
+import { renderProblem, renderResult, renderSealed } from "./js/result.js?v=202611012034";
+import { newSeed } from "./js/rng.js?v=202611012034";
+import { MAX_USED, clampInt, currentInput, getValue, problem, saveState, setValue, state } from "./js/store.js?v=202611012034";
 
 const data = { topics: null, penalties: null }; // お題・罰ゲーム（data/*.json）
 let lastDraw = null; // { mode, seed, input, time, result, secret }
@@ -173,7 +173,7 @@ async function init() {
   if (!r)
     window.LineShareUI?.firstTip(
       "qji",
-      ["決め方を選んで、名前などを入れます", "「🎟️ 引く！」で決まります。🙈 ヒミツで引くと、受け取った人が「ひらく」まで見えません", "「カードで送る」と、だれが開いても同じ結果を確かめられます"],
+      ["決め方を選んで、名前などを入れます", "「🎟️ 引く！」で決まります。🙈 ヒミツで引くと、受け取った人が「ひらく」まで見えません", "「カードでおくるん」と、だれが開いても同じ結果を確かめられます"],
       $("modes")
     );
   await loadData();

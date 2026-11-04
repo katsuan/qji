@@ -45,7 +45,7 @@
 | `js/link.js` | 確かめるリンク（読むときは、引くときと同じ形・範囲にそろえてから）・おくるんのカードの URL |
 | `js/form.js` | 画面：決め方のボタンと、モードごとの入力 |
 | `js/result.js` | 画面：結果・ヒミツの札・あみだとルーレットの図 |
-| `test/` | リンクを読む・引くのテスト（`node --test test/`。`package.json` は node に js/ を読ませるためだけ） |
+| テスト | リンクを読む・引くなどのテストは、公開しない別の所に置いている（公開の前に GitHub Actions が読んで動かす）。`package.json` は node に js/ を読ませるためだけ |
 
 おくるんのカードの URL（LIFF ID）は line-share の `shared/oqrn.js` から読む。
 

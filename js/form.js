@@ -15,6 +15,10 @@ export function renderModes(onPick) {
     button.addEventListener("click", () => onPick(m.key));
     $("modes").append(button);
   });
+  // 「引く！」の印も、選んでいる決め方と同じに
+  const now = MODES.find((m) => m.key === state.mode);
+  const drawIcon = document.querySelector("#drawButton .ls-icon");
+  if (now && drawIcon) drawIcon.dataset.icon = now.icon;
 }
 
 // 名前の入力欄（1行に1人）の HTML

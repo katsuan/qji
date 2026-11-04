@@ -3,8 +3,8 @@
 
 export const MODES = [
   { key: "lottery", icon: "ticket", label: "くじびき" },
-  { key: "amida", icon: "git-fork", label: "あみだ" },
-  { key: "roulette", icon: "target", label: "ルーレット" },
+  { key: "amida", icon: "ladder", label: "あみだ" },
+  { key: "roulette", icon: "roulette", label: "ルーレット" },
   { key: "number", icon: "hash", label: "数字" },
   { key: "topic", icon: "message-circle", label: "お題" },
   { key: "penalty", icon: "zap", label: "罰ゲーム" }

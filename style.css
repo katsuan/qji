@@ -233,6 +233,3 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   :root[data-ls-dark="auto"] .amida .rail { stroke: rgba(255, 255, 255, 0.25); }
 }
 
-/* くじだけで使う線アイコン（Q キットにまだない形：あみだのハシゴ・ルーレットの円盤）。Q キットと同じ 24 の枠・線の太さ 2 */
-.ls-icon[data-icon="ladder"] { --ls-i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M6 2v20%22/%3E%3Cpath d=%22M18 2v20%22/%3E%3Cpath d=%22M6 6h12%22/%3E%3Cpath d=%22M6 10h12%22/%3E%3Cpath d=%22M6 14h12%22/%3E%3Cpath d=%22M6 18h12%22/%3E%3C/svg%3E"); }
-.ls-icon[data-icon="roulette"] { --ls-i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2213%22 r=%228%22/%3E%3Cpath d=%22M12 5v16%22/%3E%3Cpath d=%22M5.1 9l13.8 8%22/%3E%3Cpath d=%22M5.1 17l13.8-8%22/%3E%3Cpath d=%22M10 2h4l-2 2.5z%22/%3E%3C/svg%3E"); }

@@ -82,7 +82,7 @@ export function renderSealed(d, { sender = false } = {}) {
 // まだ引けないとき：理由だけを出す
 export function renderProblem(reason) {
   $("result").hidden = false;
-  $("resultBody").innerHTML = `<p class="ls-hint" style="text-align:center">${esc(reason)}</p>`;
+  $("resultBody").innerHTML = `<p class="ls-hint">${esc(reason)}</p>`;
   $("verifyNote").hidden = true;
   $("seedNote").textContent = "";
   $("sendButton").removeAttribute("href");

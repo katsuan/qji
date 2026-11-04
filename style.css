@@ -84,9 +84,9 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .secret input { grid-row: span 2; width: 22px; height: 22px; accent-color: var(--ls-accent); }
 .secret small { color: var(--ls-subtext); font-size: 12px; font-weight: 600; }
 .secret:has(input:checked) { border-style: solid; border-color: var(--ls-accent); background: var(--ls-accent-soft); }
-.sealed { display: grid; justify-items: center; gap: 8px; padding: 16px; border-radius: var(--ls-radius-md); background: repeating-linear-gradient(135deg, #fff7f5, #fff7f5 10px, #ffeeea 10px, #ffeeea 20px); text-align: center; }
+.sealed { display: grid; justify-items: center; gap: 8px; padding: 16px; border: 2px dashed var(--ls-line-strong); border-radius: var(--ls-radius-md); background: var(--ls-surface-sub); text-align: center; }
 .sealed-mark { font-size: 44px; line-height: 1; }
-.sealed-text { margin: 0; color: var(--ls-accent-ink); font-size: 24px; font-weight: 800; }
+.sealed-text { margin: 0; color: var(--ls-text); font-size: 24px; font-weight: 800; }
 .open-sealed { width: min(100%, 260px); min-height: 52px; margin-top: 8px; border: 0; background: var(--ls-accent); color: #fff; font-size: 20px; font-weight: 800; }
 
 /* 引く！ */
@@ -218,11 +218,10 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   .result, .wheel-spin { animation: none; transition: none; }
 }
 
-/* キャッチコピー（見出しの行のすぐ下。Q キットの ls-brand-copy を、くじの赤に） */
-.ls-brand-copy { color: var(--ls-accent); font-size: 13px; letter-spacing: 0.02em; }
+/* キャッチコピー（見出しの行のすぐ下）。色はツールの赤を「引く！」だけに使うので、うすい字に */
+.ls-brand-copy { color: var(--ls-subtext); font-size: 13px; letter-spacing: 0.02em; }
 
 /* ---- 暗い表示（index.html の data-ls-dark="auto"。色の名前は ui.css の --ls-*） ---- */
 @media (prefers-color-scheme: dark) {
-  :root[data-ls-dark="auto"] .sealed { background: repeating-linear-gradient(135deg, var(--ls-surface-sub), var(--ls-surface-sub) 10px, var(--ls-surface) 10px, var(--ls-surface) 20px); }
   :root[data-ls-dark="auto"] .amida .rail { stroke: rgba(255, 255, 255, 0.25); }
 }

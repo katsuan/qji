@@ -11,7 +11,7 @@ export function renderModes(onPick) {
     button.type = "button";
     button.className = "mode" + (m.key === state.mode ? " is-active" : "");
     button.setAttribute("aria-pressed", String(m.key === state.mode));
-    button.innerHTML = `<span aria-hidden="true">${m.icon}</span>${m.label}`; // qcheck-ok: W1 決まった一覧（MODES）の文字だけ
+    button.innerHTML = `<span class="ls-icon" data-icon="${m.icon}" aria-hidden="true"></span>${m.label}`; // qcheck-ok: W1 決まった一覧（MODES）の文字だけ。icon は Q キットの線アイコンの名前
     button.addEventListener("click", () => onPick(m.key));
     $("modes").append(button);
   });

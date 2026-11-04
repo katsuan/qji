@@ -2,12 +2,12 @@
 // 読まれるところ：app.js とすべての js/（import）
 
 export const MODES = [
-  { key: "lottery", icon: "🎟️", label: "くじびき" },
-  { key: "amida", icon: "🪜", label: "あみだ" },
-  { key: "roulette", icon: "🎡", label: "ルーレット" },
-  { key: "number", icon: "🔢", label: "数字" },
-  { key: "topic", icon: "💬", label: "お題" },
-  { key: "penalty", icon: "😈", label: "罰ゲーム" }
+  { key: "lottery", icon: "ticket", label: "くじびき" },
+  { key: "amida", icon: "git-fork", label: "あみだ" },
+  { key: "roulette", icon: "target", label: "ルーレット" },
+  { key: "number", icon: "hash", label: "数字" },
+  { key: "topic", icon: "message-circle", label: "お題" },
+  { key: "penalty", icon: "zap", label: "罰ゲーム" }
 ];
 
 // key の決め方（MODES の1つ）を返す

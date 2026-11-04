@@ -18,7 +18,7 @@ function showResultCard() {
 function setActions({ send, copyLabel }) {
   $("sendButton").hidden = !send;
   $("copyButton").hidden = !send;
-  $("copyButton").textContent = copyLabel;
+  $("copyButton").innerHTML = `<span class="ls-icon" data-icon="link" aria-hidden="true"></span>${copyLabel}`; // qcheck-ok: W1 決まった言葉だけ
 }
 
 // 結果の中身（モードごと）
@@ -45,11 +45,11 @@ const BODIES = {
 export function renderResult(d, { verified = false } = {}) {
   const r = d.result;
   const mode = findMode(d.mode);
-  setActions({ send: true, copyLabel: "🔗 確かめるリンクをコピー" });
+  setActions({ send: true, copyLabel: "確かめるリンクをコピー" });
   // qcheck-ok: W1 mode は決まった一覧（MODES）のもの。中身は BODIES の中で esc している
-  $("resultBody").innerHTML = `<p class="result-title">${mode.icon} ${mode.label}の結果</p>` + (BODIES[r.kind] || (() => ""))(r);
+  $("resultBody").innerHTML = `<p class="result-title"><span class="ls-icon" data-icon="${mode.icon}" aria-hidden="true"></span>${mode.label}の結果</p>` + (BODIES[r.kind] || (() => ""))(r);
   // 確かめるリンクで開いたとき：同じタネ・同じ条件で、いま引き直した結果だと上に出す（引いた人の結果と同じになる）
-  $("verifyNote").textContent = "✅ 同じタネ・同じ条件で引き直した結果";
+  $("verifyNote").innerHTML = `<span class="ls-icon" data-icon="check" aria-hidden="true"></span>同じタネ・同じ条件で引き直した結果`; // qcheck-ok: W1 決まった言葉だけ
   $("verifyNote").hidden = !verified;
   const when = verified && d.time ? new Date(d.time).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
   $("seedNote").innerHTML =
@@ -65,16 +65,16 @@ export function renderResult(d, { verified = false } = {}) {
 export function renderSealed(d, { sender = false } = {}) {
   const mode = findMode(d.mode);
   $("resultBody").innerHTML =
-    `<p class="result-title">${mode.icon} ${mode.label}</p>` +
+    `<p class="result-title"><span class="ls-icon" data-icon="${mode.icon}" aria-hidden="true"></span>${mode.label}</p>` +
     `<div class="sealed"><span class="sealed-mark" aria-hidden="true">🔒</span><p class="sealed-text">結果はヒミツ</p>` +
     (sender
       ? `<p class="ls-hint">あなたにも見えていません。カードで送って、みんなで「ひらく」を押してね。</p>`
-      : `<p class="ls-hint">せーので、ひらいてね</p><button id="openSealed" class="ls-button open-sealed" type="button">🎁 ひらく</button>`) +
+      : `<p class="ls-hint">せーので、ひらいてね</p><button id="openSealed" class="ls-button open-sealed" type="button"><span class="ls-icon" data-icon="gift" aria-hidden="true"></span>ひらく</button>`) +
     `</div>`;
   $("verifyNote").hidden = true;
   $("seedNote").textContent = "";
   $("sendButton").href = cardUrl(d);
-  setActions({ send: sender, copyLabel: "🔗 ひらくリンクをコピー" });
+  setActions({ send: sender, copyLabel: "ひらくリンクをコピー" });
   showResultCard();
   if (!sender) $("openSealed").addEventListener("click", () => renderResult({ ...d, secret: false }, { verified: true }));
 }

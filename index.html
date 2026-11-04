@@ -44,10 +44,10 @@
   <section id="form" class="ls-panel tool-only" aria-live="polite"></section>
 
   <!-- ヒミツで引く：引いた人にも結果を見せず、受け取った人が「ひらく」を押すまで伏せておく -->
-  <label class="secret tool-only"><input id="secretToggle" type="checkbox">🙈 ヒミツで引く<small>結果を見ずにカードで送り、みんなで「ひらく」</small></label>
+  <label class="secret tool-only"><input id="secretToggle" type="checkbox"><span class="secret-title"><span class="ls-icon" data-icon="eye-off" aria-hidden="true"></span>ヒミツで引く</span><small>結果を見ずにカードで送り、みんなで「ひらく」</small></label>
   <!-- まだ引けないときの理由（入力のすぐ下に赤い文字で） -->
   <p id="drawError" class="ls-hint is-error tool-only" role="alert" hidden></p>
-  <button id="drawButton" class="draw tool-only" type="button">🎟️ 引く！</button>
+  <button id="drawButton" class="draw tool-only" type="button"><span class="ls-icon" data-icon="ticket" aria-hidden="true"></span>引く！</button>
 
   <!-- 結果。確かめるリンクで開いたときは、上に「同じ条件で引き直した結果」と出す -->
   <section id="result" class="ls-panel result" hidden>
@@ -56,14 +56,14 @@
     <p id="seedNote" class="seed-note"></p>
     <div class="actions">
       <a id="sendButton" class="ls-button is-block line is-oqrn" href="#">カードでおくるん</a>
-      <button id="copyButton" class="ls-button is-block" type="button">🔗 確かめるリンクをコピー</button>
-      <a class="ls-button is-block result-page-only" href="./">🎟️ 新しくくじを引く</a>
+      <button id="copyButton" class="ls-button is-block" type="button"><span class="ls-icon" data-icon="link" aria-hidden="true"></span>確かめるリンクをコピー</button>
+      <a class="ls-button is-block result-page-only" href="./"><span class="ls-icon" data-icon="ticket" aria-hidden="true"></span>新しくくじを引く</a>
     </div>
     <p id="status" class="status" role="status"></p>
   </section>
 
   <details class="ls-fold about tool-only">
-    <summary><span class="ls-fold-icon" aria-hidden="true">🔍</span>公平に決まる仕組み</summary>
+    <summary><span class="ls-fold-icon ls-icon" data-icon="search" aria-hidden="true"></span>公平に決まる仕組み</summary>
     <div class="ls-fold-body">
     <p>引くたびに、ランダムな「タネ」（数字）を1つ作り、そのタネと入れた名前などから結果を決めます。</p>
     <p>「確かめるリンク」を開くと、同じタネと同じ条件でもう一度引き直すので、だれが開いても必ず同じ結果になります。あとから都合よく引き直していないことを、みんなで確かめられます。</p>

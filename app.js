@@ -115,15 +115,9 @@ $("sendButton").addEventListener("click", (event) => {
 $("copyButton").addEventListener("click", async () => {
   if (!lastDraw) return;
   const url = verifyUrl(lastDraw);
-  try {
-    await navigator.clipboard.writeText(url);
-    // 知らせは Q キットのトースト（読めないときは下の文字）
-    if (window.LineShareUI?.toast) window.LineShareUI.toast(window.QSeason ? QSeason.decorate("確かめるリンクをコピーしました") : "確かめるリンクをコピーしました"); // 季節の絵文字をときどき
-    else $("status").textContent = "確かめるリンクをコピーしました。";
-  } catch {
-    // コピーできないとき：長押しで選べる文字で出す（ブラウザの小窓は使わない）
-    window.LineShareUI?.ask({ title: "長押ししてコピーしてね", input: url, readonly: true, ok: "閉じる", cancel: null });
-  }
+  // Q キットのコピー（できたらトースト。季節の絵文字をときどき。できないときは長押しで選べる文字の窓）
+  const done = window.QSeason ? QSeason.decorate("確かめるリンクをコピーしました") : "確かめるリンクをコピーしました";
+  await window.LineShareUI?.copy(url, { done, title: "長押ししてコピーしてね" });
 });
 
 // ---- はじめに ----

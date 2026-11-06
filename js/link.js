@@ -95,7 +95,7 @@ function badges(d, mode) {
   return list;
 }
 
-// おくるんのお知らせカード（line-share の shared/oqrn.js）
+// おくるんのお知らせカード（oqrn の shared/oqrn.js）
 export function cardUrl(d) {
   const mode = findMode(d.mode);
   const common = { theme: "custom", customColor: CARD_COLOR, showAction: "true", actionUrl: verifyUrl(d), from: "qji" };

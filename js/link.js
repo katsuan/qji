@@ -4,6 +4,7 @@
 import { draw, summary } from "./draw.js?v=202611012034";
 import { findMode, isMode } from "./modes.js?v=202611012034";
 import { clampInt, problem } from "./store.js?v=202611012034";
+import { NAMES } from "./names.js?v=202611012034";
 
 const PAGE_URL = "https://katsuan.github.io/qji/";
 const CARD_COLOR = "#E23E4A"; // ロゴのコーラルの赤
@@ -105,7 +106,7 @@ export function cardUrl(d) {
     const who = (d.input.names || d.input.items || []).slice(0, 12).join("、");
     params = new URLSearchParams({
       headerTitle: `${mode.icon} ${mode.label}`,
-      date: "くじ（Qji）",
+      date: `${NAMES.app}（${NAMES.en}）`,
       showDate: "true",
       title: "🔒 結果はひらくまでヒミツ",
       detail: (who ? `参加：${who}\n` : "") + "せーので、みんなでひらいてね🎁",
@@ -116,11 +117,11 @@ export function cardUrl(d) {
     const sum = summary(d.input, d.result);
     params = new URLSearchParams({
       headerTitle: `${mode.icon} ${mode.label}の結果`,
-      date: "くじ（Qji）で決めました",
+      date: `${NAMES.app}（${NAMES.en}）で決めました`,
       showDate: "true",
       title: sum.title.slice(0, 60),
       detail: sum.lines.join("\n").slice(0, 300),
-      actionLabel: "🔍 くじで確かめる",
+      actionLabel: `🔍 ${NAMES.app}で確かめる`,
       ...common
     });
   }

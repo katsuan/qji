@@ -62,7 +62,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   color: var(--ls-text);
   font: inherit;
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
 }
 .stepper input { text-align: center; }
@@ -78,7 +78,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   border-radius: var(--ls-radius-md);
   background: var(--ls-surface);
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
 }
 .secret-title { display: inline-flex; align-items: center; gap: var(--ls-space-s); }
@@ -87,8 +87,8 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .secret:has(input:checked) { border-style: solid; border-color: var(--ls-accent); background: var(--ls-accent-soft); }
 .sealed { display: grid; justify-items: center; gap: var(--ls-space-s); padding: var(--ls-space-m); border: 2px dashed var(--ls-line-strong); border-radius: var(--ls-radius-md); background: var(--ls-surface-sub); text-align: center; }
 .sealed-mark { font-size: 44px; line-height: 1; }
-.sealed-text { margin: 0; color: var(--ls-text); font-size: 24px; font-weight: 800; }
-.open-sealed { width: min(100%, 260px); min-height: 52px; margin-top: var(--ls-space-s); border: 0; background: var(--ls-accent); color: #fff; font-size: 20px; font-weight: 800; }
+.sealed-text { margin: 0; color: var(--ls-text); font-size: 24px; font-weight: 700; }
+.open-sealed { width: min(100%, 260px); min-height: 52px; margin-top: var(--ls-space-s); border: 0; background: var(--ls-accent); color: #fff; font-size: 20px; font-weight: 700; }
 
 /* 引く！ */
 .draw {
@@ -104,7 +104,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   color: #fff;
   font: inherit;
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
 }
 .draw:active { transform: translateY(1px); }
@@ -118,7 +118,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   margin: 0;
   color: var(--ls-accent-ink);
   font-size: 30px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.35;
   text-align: center;
   word-break: break-word;
@@ -134,7 +134,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   font-size: 16px;
   font-weight: 700;
 }
-.list li.is-win { background: var(--ls-accent-soft); color: var(--ls-accent-ink); font-weight: 800; }
+.list li.is-win { background: var(--ls-accent-soft); color: var(--ls-accent-ink); font-weight: 700; }
 .list li .no {
   display: inline-grid;
   place-items: center;
@@ -164,7 +164,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   font-size: 30px;
   font-variant-numeric: tabular-nums;
 }
-.who { margin: 0; font-size: 18px; font-weight: 800; }
+.who { margin: 0; font-size: 18px; font-weight: 700; }
 
 /* 1文字＋お題：大きな1文字（くじの札のような白地に赤い枠）と、お題 */
 .letter-q { display: flex; align-items: center; justify-content: center; gap: var(--ls-space-m); margin: 0; }
@@ -179,7 +179,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   background: var(--ls-surface-sub);
   color: var(--ls-accent-ink);
   font-size: 52px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
 }
 .letter-text { font-size: 17px; font-weight: 700; line-height: 1.6; }
@@ -218,7 +218,7 @@ textarea.ls-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .is-result-page .result-page-only, .is-result-page .ls-button.result-page-only { display: flex; }
 .actions { display: grid; gap: var(--ls-space-s); }
 /* 送るボタン：色は Q キットの ls-button line（LINE の緑）。ここでは大きさだけ */
-.ls-button.line { gap: var(--ls-space-xs); font-size: 16px; font-weight: 800; }
+.ls-button.line { gap: var(--ls-space-xs); font-size: 16px; font-weight: 700; }
 .status { min-height: 1em; margin: 0; color: var(--ls-subtext); font-size: 13px; }
 
 .about p { margin: 0; color: var(--ls-subtext); font-size: 14px; line-height: 1.8; }
